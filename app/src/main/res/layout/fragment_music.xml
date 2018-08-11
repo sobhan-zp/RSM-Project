@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+
+            <com.dlazaro66.qrcodereaderview.QRCodeReaderView
+                android:id="@+id/qrdecoderview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:background="#55000000"
+                android:id="@+id/result_text_view"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:padding="16dp"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                />
+
+            <CheckBox
+                android:id="@+id/flashlight_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:background="#99000000"
+                android:checked="false"
+                android:padding="16dp"
+                android:text="روشن/ خاموش کردن فلاش"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+            <CheckBox
+                android:background="#99000000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="On/Off QR decoding"
+                android:layout_above="@+id/flashlight_checkbox"
+                android:textSize="14sp"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:textColor="#ffffff"
+                android:id="@+id/enable_decoding_checkbox"
+                android:checked="true"
+                />
+
+
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+</FrameLayout>

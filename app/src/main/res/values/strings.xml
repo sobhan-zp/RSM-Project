@@ -1,0 +1,115 @@
+<resources>
+    <string name="app_name">RSM</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="directions_base_url">https://maps.googleapis.com/</string>
+
+    <!--App OnBoarding-->
+    <string name="slide1_title">Welcome</string>
+    <string name="slide1_desc">NavAR is an Location Based Augmented Reality Navigation Application .
+                    Easy to use , Realtime and Fun !</string>
+
+    <string name="slide2_title">Augmented Reality Navigation</string>
+    <string name="slide2_desc">Realtime AR navigation to the destination of your choice . Follow the Dots to reach your destination</string>
+
+    <string name="slide3_title">Augmented Reality Point of Interest Browser</string>
+    <string name="slide3_desc">View Places around you in AR and in realtime </string>
+
+    <string name="lato_light">fonts/Lato-Light.ttf</string>
+
+    <!--POI Names-->
+    <string name="atm">دستگاه خودپرداز</string>
+    <string name="hosp">بیمارستان</string>
+    <string name="logding">مسکن</string>
+    <string name="movie">سینما</string>
+    <string name="restaurant">رستوران</string>
+    <string name="cafe">کافی شاپ</string>
+    <string name="bakery">نانوایی</string>
+    <string name="bus">ایستگاه اتوبوس</string>
+    <string name="lib">کتابخانه</string>
+    <string name="mall">مرکز خرید</string>
+    <string name="taxi">ایستگاه تاکسی</string>
+    <string name="pharmacy">داروخانه</string>
+    <string name="park">پارک</string>
+    <string name="parking">پارکینگ</string>
+
+    <string name="google_maps_key">AIzaSyD0KIA7b_fSACEnMeJLokUHwJAIFk_tWdg</string>
+    <string name="et_search_activity_main">جستجو</string>
+    <string name="aboutme_activity_main">درباره ما</string>
+    <string name="newarby_activity_main">مکان های نزدیک</string>
+    <string name="arnavigation_activity_main">مسیریابی واقعیت افزوده</string>
+    <string name="source_activity_nav">مبدأ</string>
+    <string name="destination_activity_nav">مقصد</string>
+    <string name="noting_source">مبدأ انتخاب نشده</string>
+    <string name="destination_source">مقصد انتخاب نشده</string>
+    <string name="btn_select_activity_main">انتخاب</string>
+    <string name="tv_ar_activity_nav">شروع مسیریابی تصویری</string>
+    <string name="tv_map_activity_nav">شروع مسیریابی نقشه</string>
+    <string name="btn_start_activity_nav">شروع</string>
+    <string name="internet_on">لطفا اینترنت خود را روشن کنید</string>
+    <string name="gps_on">لطفا gps خود را روشن کنید</string>
+    <string name="search_empty">لطفا مکان را انتخاب کنید</string>
+    <string name="error_server_map1">خطا در سرور - 1</string>
+    <string name="tv_loadingnrearby_poi">در حال بارگیری نزدیکترین نقطه</string>
+    <string name="tv_name_poi">نام</string>
+    <string name="tv_address_poi">آدرس</string>
+    <string name="tv_ar_direction_poi">مسیریابی تصویری</string>
+    <string name="tv_map_direction_poi">مسیریابی نقشه</string>
+    <string name="tv_distance_poi">فاصله</string>
+    <string name="redius_300_poiActivity">محدوده 300 متری</string>
+    <string name="redius_poiActivity">محدوده</string>
+    <string name="no_image_poiActivity">عکسی دریافت نشد</string>
+    <string name="error_openmap_poiActivity">متأسفانه نقشه باز نشد</string>
+    <string name="invalid_location">مبدأ و مقصد را مشخص کنید</string>
+    <string name="dist">مسافت</string>
+    <string name="time">زمان</string>
+    <string name="error_fetch">دریافت اطلاعات ناقص بود</string>
+    <string name="permission_location">مجوز رد شد ، لطفا  مجوز مکان را برای مسیریابی بدهید</string>
+    <string name="about">درباره ما</string>
+    <string name="meters_poiActivity">متر</string>
+    <string name="about_title">تیم نرم افزاری لوپر</string>
+    <string name="about_title_1">واقعیت افزوده</string>
+    <string name="about_title_2">تولید نرم افزار اندروید</string>
+    <string name="about_title_3">طراحی وب‌سایت</string>
+    <string name="about_title_4">دیجیتال مارکتینگ</string>
+    <string name="about_title_programmer">برنامه نویس</string>
+    <string name="about_programmer_1">سبحان زمین پیما ..... 09113872283</string>
+    <string name="about_programmer_2">مازیار غفاری پور ..... 09119376871</string>
+
+
+
+    <string name="input_phone">لطفا شماره موبایل خود را وارد کنید</string>
+    <string name="login">ورود</string>
+    <string name="save">ثبت</string>
+    <string name="title_activity_body">BodyActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+
+
+    <string name="profile">پروفایل</string>
+    <string name="map">نقشه</string>
+    <string name="music">پادکست</string>
+    <string name="gallery">گالری</string>
+    <string name="home">خانه</string>
+    <string name="tv_ar">واقعیت افزوده</string>
+    <string name="tv_vr">واقعیت مجازی</string>
+
+
+
+
+    <string name="today_is_going_to_be">Today is going to be</string>
+    <string name="map_api_key">AIzaSyBdnGCVMWokypaPplS8axxs-fFD1K9W-Oc</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="trip_starts_in_2_days">TRIP STARTS IN 2 DAYS</string>
+    <string name="this_weekend">This weekend we\'re going to:</string>
+    <string name="monkey_forest">Monkey Forest</string>
+    <string name="sign_up_for_this">SIGN UP FOR THIS</string>
+    <string name="mapPlaceholderTransition">mapPlaceholderTransition</string>
+
+
+</resources>
