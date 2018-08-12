@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.location.Location;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -571,6 +572,7 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
     @Override
     public void onClickBeyondarObject(ArrayList<BeyondarObject> beyondarObjects) {
         if (beyondarObjects.size() > 0) {
+            Log.e("SOBHAn-------------" , beyondarObjects.get(0).getName());
             Poi_details_call(beyondarObjects.get(0).getName());
         }
     }

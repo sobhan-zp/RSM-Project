@@ -55,11 +55,11 @@
                     android:id="@+id/poi_place_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:paddingTop="40dp"
                     android:text="@string/tv_name_poi"
                     android:textColor="#000"
-                    android:maxLines="2"
-                    android:textSize="28sp"
-                    android:paddingTop="40dp"/>
+                    android:textSize="28sp" />
 
                 <TextView
                     android:id="@+id/poi_place_address"
@@ -81,7 +81,7 @@
                 android:layout_below="@id/poi_name_addr_group"
                 android:layout_marginBottom="10dp">
 
-            <View
+                <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#e2e2e2"/>

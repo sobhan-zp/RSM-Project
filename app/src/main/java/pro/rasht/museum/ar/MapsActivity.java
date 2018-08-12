@@ -3,27 +3,44 @@ package pro.rasht.museum.ar;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beyondar.android.view.OnClickBeyondarObjectListener;
+import com.beyondar.android.world.BeyondarObject;
+import com.beyondar.android.world.GeoObject;
+import com.beyondar.android.world.World;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -38,9 +55,33 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.SphericalUtil;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import pro.rasht.museum.ar.ar.ArBeyondarGLSurfaceView;
+import pro.rasht.museum.ar.ar.ArFragmentSupport;
+import pro.rasht.museum.ar.ar.OnTouchBeyondarViewListenerMod;
+import pro.rasht.museum.ar.network.PlaceResponse;
+import pro.rasht.museum.ar.network.PoiResponse;
+import pro.rasht.museum.ar.network.RetrofitInterface;
+import pro.rasht.museum.ar.network.poi.Result;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource;
 
@@ -52,6 +93,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnMarkerClickListener,
         LocationListener,
+        OnClickBeyondarObjectListener,
+        OnTouchBeyondarViewListenerMod,
         View.OnClickListener {
 
     final Context context = this;
@@ -92,6 +135,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     static final LatLng lakani = new LatLng(37.275524, 49.580935);
 
 
+
+    //private TextView dialog_loading_text;
+    private Location location;
+    private GoogleApiClient mGoogleApiClient;
+    private LayoutInflater layoutInflater;
+    //private ArFragmentSupport arFragmentSupport;
+    private World world;
+    List<Result> poiResult;
+
+    @BindView(R.id.dialog_place_detail)
+    CardView dialog_cardview;
+    @BindView(R.id.dialog_place_close_btn)
+    ImageButton dialog_cardview_close_btn;
+    @BindView(R.id.dialog_place_name)
+    TextView dialog_place_name;
+    @BindView(R.id.dialog_place_address)
+    TextView dialog_place_addr;
+    @BindView(R.id.dialog_place_image)
+    ImageView dialog_place_image;
+    @BindView(R.id.dialog_place_ar_direction)
+    Button dialog_place_ar_btn;
+    @BindView(R.id.dialog_brwoser_progress)
+    ProgressBar dialog_browser_progress;
+    @BindView(R.id.dialog_place_maps_direction)
+    Button dialog_place_maps_btn;
+    /*@BindView(R.id.seekBar)
+    SeekBar seekbar;
+    @BindView(R.id.seekbar_cardview)
+    CardView seekbar_cardview;*/
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,9 +175,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         addMap();
         addLines();
+        dialog_browser_progress.setVisibility(View.GONE);
+        dialog_cardview.setVisibility(View.GONE);
+        arNav();
+
 
 
     }
+
+
 
 
     @Override
@@ -114,54 +195,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 marker.getTitle() + " has been clicked " + " times.",
                 Toast.LENGTH_SHORT).show();*/
 
+        Poi_details_call(poiResult.get(0).getPlaceId());
 
-        final Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.dialog_item_marker_map);
-
-        ImageView imgMarkerDialogmap = (ImageView) dialog.findViewById(R.id.img_marker_dialogmap);
-        Button btnArDialogmap = (Button) dialog.findViewById(R.id.btn_ar_dialogmap);
-        Button btnVrDialogmap = (Button) dialog.findViewById(R.id.btn_vr_dialogmap);
-        TextView tvTitleDialogmap = (TextView) dialog.findViewById(R.id.tv_title_dialogmap);
-        // if button is clicked, close the custom dialog
-
-
-        tvTitleDialogmap.setText(marker.getTitle());
-
-
-        btnArDialogmap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(MapsActivity.this,ArCamActivity.class);
-
-                /*try {
-                    intent.putExtra("SRC", "Current Location");
-                    intent.putExtra("DEST",  result.getGeometry().getLocation().getLat()+","+
-                            result.getGeometry().getLocation().getLng());
-                    intent.putExtra("SRCLATLNG",  mLastLocation.getLatitude()+","+mLastLocation.getLongitude());
-                    intent.putExtra("DESTLATLNG", result.getGeometry().getLocation().getLat()+","+
-                            result.getGeometry().getLocation().getLng());
-                    startActivity(intent);
-                    finish();
-                }catch (NullPointerException npe){
-                    Log.d(TAG, "onClick: The IntentExtras are Empty");
-                }*/
-            }
-        });
-
-
-        btnVrDialogmap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Vr..!!",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-
-
-
-        dialog.show();
-
+        Log.e("ID----------" , poiResult.get(0).getPlaceId());
 
         return false;
     }
@@ -391,7 +427,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 getPackageName());
 
         if (status == PackageManager.PERMISSION_GRANTED) {
-            Location location = mLocationManager.getLastKnownLocation(provider);
+            location = mLocationManager.getLastKnownLocation(provider);
             updateWithNewLocation(location);
             //  mLocationManager.addGpsStatusListener(this);
             long minTime = 5000;// ms
@@ -399,6 +435,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mLocationManager.requestLocationUpdates(provider, minTime, minDist,
                     this);
         }
+        Poi_list_call(900);
     }
 
     private boolean isProviderAvailable() {
@@ -465,6 +502,402 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mCurrentPosition.remove();
         mCurrentPosition = mMap.addMarker(mMarkerOptions);
     }
+
+
+    // Start Ar Navigation After Click
+
+    private void arNav() {
+
+        //dialog_loading_text=(TextView) findViewById(R.id.loading_text);
+
+        /*arFragmentSupport = (ArFragmentSupport) getSupportFragmentManager().findFragmentById(
+                R.id.dialog_cam_fragment);
+        arFragmentSupport.setOnClickBeyondarObjectListener(this);
+        arFragmentSupport.setOnTouchBeyondarViewListener(this);*/
+
+        //dialog_loading_text=(TextView) findViewById(R.id.loading_text);
+
+        Set_googleApiClient(); //Sets the GoogleApiClient
+
+        dialog_cardview_close_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //seekbar_cardview.setVisibility(View.VISIBLE);
+                dialog_cardview.setVisibility(View.GONE);
+                dialog_place_image.setImageResource(android.R.color.transparent);
+                dialog_place_name.setText(" ");
+                dialog_place_addr.setText(" ");
+            }
+        });
+
+
+    }
+
+    private void Set_googleApiClient() {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
+
+    void Poi_list_call(int radius){
+        dialog_browser_progress.setVisibility(View.VISIBLE);
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getResources().getString(R.string.directions_base_url))
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitInterface apiService =
+                retrofit.create(RetrofitInterface.class);
+
+        final Call<PoiResponse> call = apiService.listPOI(String.valueOf(location.getLatitude())+","+
+                        String.valueOf(location.getLongitude()),radius,
+                getResources().getString(R.string.google_maps_key));
+
+        call.enqueue(new Callback<PoiResponse>() {
+            @Override
+            public void onResponse(Call<PoiResponse> call, Response<PoiResponse> response) {
+
+                dialog_browser_progress.setVisibility(View.GONE);
+                //seekbar_cardview.setVisibility(View.VISIBLE);
+
+                poiResult=response.body().getResults();
+
+
+                Log.e("MAZIAR----------------" , "------------------------------------------------");
+
+                Configure_AR(poiResult);
+            }
+
+            @Override
+            public void onFailure(Call<PoiResponse> call, Throwable t) {
+                dialog_browser_progress.setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+    void Poi_details_call(String placeid){
+
+        dialog_browser_progress.setVisibility(View.VISIBLE);
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getResources().getString(R.string.directions_base_url))
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitInterface apiService =
+                retrofit.create(RetrofitInterface.class);
+
+        final Call<PlaceResponse> call = apiService.getPlaceDetail(placeid,
+                getResources().getString(R.string.google_maps_key));
+
+        call.enqueue(new Callback<PlaceResponse>() {
+            @Override
+            public void onResponse(Call<PlaceResponse> call, Response<PlaceResponse> response) {
+
+                //seekbar_cardview.setVisibility(View.GONE);
+                dialog_cardview.setVisibility(View.VISIBLE);
+                dialog_browser_progress.setVisibility(View.GONE);
+
+                final pro.rasht.museum.ar.network.place.Result result=response.body().getResult();
+
+                dialog_place_name.setText(result.getName());
+                dialog_place_addr.setText(result.getFormattedAddress());
+
+                try {
+                    HttpUrl url = new HttpUrl.Builder()
+                            .scheme("https")
+                            .host("maps.googleapis.com")
+                            .addPathSegments("maps/api/place/photo")
+                            .addQueryParameter("maxwidth", "400")
+                            .addQueryParameter("photoreference", result.getPhotos().get(0).getPhotoReference())
+                            .addQueryParameter("key", getResources().getString(R.string.google_maps_key))
+                            .build();
+
+                    new PoiPhotoAsync().execute(url.toString());
+
+                }catch (Exception e){
+                    Log.d(TAG, "onResponse: "+e.getMessage());
+                    Toast.makeText(MapsActivity.this,getString(R.string.no_image_poiActivity), Toast.LENGTH_SHORT).show();
+                }
+
+                dialog_place_maps_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent;
+                        try{
+                            Uri.Builder builder = new Uri.Builder();
+                            builder.scheme("http")
+                                    .authority("maps.google.com")
+                                    .appendPath("maps")
+                                    .appendQueryParameter("saddr", location.getLatitude()+","+location.getLongitude())
+                                    .appendQueryParameter("daddr",result.getGeometry().getLocation().getLat()+","+
+                                            result.getGeometry().getLocation().getLng());
+
+                            intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                    Uri.parse( builder.build().toString()));
+                            startActivity(intent);
+                            finish();
+                        }catch (Exception e){
+                            Log.d(TAG, "onClick: mapNav Exception caught");
+                            Toast.makeText(MapsActivity.this, getString(R.string.error_openmap_poiActivity), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                dialog_place_ar_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent=new Intent(MapsActivity.this,ArCamActivity.class);
+
+                        try {
+                            intent.putExtra("SRC", "Current Location");
+                            intent.putExtra("DEST",  result.getGeometry().getLocation().getLat()+","+
+                                    result.getGeometry().getLocation().getLng());
+                            intent.putExtra("SRCLATLNG",  location.getLatitude()+","+location.getLongitude());
+                            intent.putExtra("DESTLATLNG", result.getGeometry().getLocation().getLat()+","+
+                                    result.getGeometry().getLocation().getLng());
+                            startActivity(intent);
+                            finish();
+                        }catch (NullPointerException npe){
+                            Log.d(TAG, "onClick: The IntentExtras are Empty");
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onFailure(Call<PlaceResponse> call, Throwable t) {
+                dialog_browser_progress.setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+
+    public class PoiPhotoAsync extends AsyncTask<String,Void,Bitmap> {
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            dialog_place_image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            dialog_place_image.setImageBitmap(bitmap);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL = urls[0];
+
+            Bitmap bitmap = null;
+            try {
+                InputStream input = new java.net.URL(imageURL).openStream();
+                bitmap = BitmapFactory.decodeStream(input);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+    }
+
+    private void Configure_AR(List<Result> pois){
+
+        layoutInflater=getLayoutInflater();
+
+        world=new World(getApplicationContext());
+        world.setGeoPosition(location.getLatitude(),location.getLongitude());
+        world.setDefaultImage(R.drawable.ar_sphere_default);
+
+//        arFragmentSupport.getGLSurfaceView().setPullCloserDistance(25);
+
+        GeoObject geoObjects[]=new GeoObject[pois.size()];
+
+        for(int i=0;i<pois.size();i++) {
+            GeoObject poiGeoObj=new GeoObject(1000*(i+1));
+            //ArObject2 poiGeoObj=new ArObject2(1000*(i+1));
+
+//            poiGeoObj.setImageUri(getImageUri(this,textAsBitmap(pois.get(i).getName(),10.0f, Color.WHITE)));
+            poiGeoObj.setGeoPosition(pois.get(i).getGeometry().getLocation().getLat(),
+                    pois.get(i).getGeometry().getLocation().getLng());
+            poiGeoObj.setName(pois.get(i).getPlaceId());
+            //poiGeoObj.setPlaceId(pois.get(0).getPlaceId());
+
+            //Bitmap bitmap=textAsBitmap(pois.get(i).getName(),30.0f,Color.WHITE);
+
+            Bitmap snapshot = null;
+            View view= getLayoutInflater().inflate(R.layout.poi_container,null);
+            TextView name= (TextView)view.findViewById(R.id.poi_container_name);
+            TextView dist= (TextView)view.findViewById(R.id.poi_container_dist);
+            ImageView icon=(ImageView)view.findViewById(R.id.poi_container_icon);
+
+            name.setText(pois.get(i).getName());
+            String distance=String.valueOf((SphericalUtil.computeDistanceBetween(
+                    new LatLng(location.getLatitude(),location.getLongitude()),
+                    new LatLng(pois.get(i).getGeometry().getLocation().getLat(),
+                            pois.get(i).getGeometry().getLocation().getLng())))/1000);
+            String d=distance+" KM";
+            dist.setText(d);
+
+            String type=pois.get(i).getTypes().get(0);
+            Log.d(TAG, "Configure_AR: TYPE:"+type + "LODGING:"+R.string.logding);
+            if(type.equals(getResources().getString(R.string.restaurant))){
+                icon.setImageResource(R.drawable.food_fork_drink);
+            }else if(type.equals(getResources().getString(R.string.logding))){
+                icon.setImageResource(R.drawable.hotel);
+            }else if(type.equals(getResources().getString(R.string.atm))){
+                icon.setImageResource(R.drawable.cash_usd);
+            }else if(type.equals(getResources().getString(R.string.hosp))){
+                icon.setImageResource(R.drawable.hospital);
+            }else if(type.equals(getResources().getString(R.string.movie))){
+                icon.setImageResource(R.drawable.filmstrip);
+            }else if(type.equals(getResources().getString(R.string.cafe))){
+                icon.setImageResource(R.drawable.coffee);
+            }else if(type.equals(getResources().getString(R.string.bakery))){
+                icon.setImageResource(R.drawable.food);
+            }else if(type.equals(getResources().getString(R.string.mall))){
+                icon.setImageResource(R.drawable.shopping);
+            }else if(type.equals(getResources().getString(R.string.pharmacy))){
+                icon.setImageResource(R.drawable.pharmacy);
+            }else if(type.equals(getResources().getString(R.string.park))){
+                icon.setImageResource(R.drawable.pine_tree);
+            }else if(type.equals(getResources().getString(R.string.bus))){
+                icon.setImageResource(R.drawable.bus);
+            }else {
+                icon.setImageResource(R.drawable.map_icon);
+            }
+
+
+            view.setDrawingCacheEnabled(true);
+            view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+            try {
+                //  Paint paint = new Paint(ANTI_ALIAS_FLAG);
+//                paint.setTextSize(textSize);
+//                paint.setColor(textColor);
+                //paint.setTextAlign(Paint.Align.LEFT);
+//                float baseline = -paint.ascent(); // ascent() is negative
+//                int width = (int) (paint.measureText(pois.get(i).getName()) + 0.5f); // round
+//                int height = (int) (baseline + paint.descent() + 0.5f);
+
+                view.measure(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                snapshot = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight()
+                        , Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(snapshot);
+                view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+                view.draw(canvas);
+                //canvas.drawBitmap(snapshot);
+                //snapshot = Bitmap.createBitmap(view.getDrawingCache(),10,10,200,100); // You can tell how to crop the snapshot and whatever in this method
+            } finally {
+                view.setDrawingCacheEnabled(false);
+            }
+
+
+            String uri=saveToInternalStorage(snapshot,pois.get(i).getId()+".png");
+
+            //icon.setImageURI(Uri.parse(uri));
+            poiGeoObj.setImageUri(uri);
+
+            world.addBeyondarObject(poiGeoObj);
+        }
+
+        //dialog_loading_text.setVisibility(View.INVISIBLE);
+
+        // ... and send it to the fragment
+        //arFragmentSupport.setWorld(world);
+
+    }
+
+    private String saveToInternalStorage(Bitmap bitmapImage,String name){
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath=new File(directory,name);
+
+        Log.d(TAG, "saveToInternalStorage: PATH:"+mypath.toString());
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return mypath.toString();
+    }
+
+
+
+
+    @Override
+    public void onClickBeyondarObject(ArrayList<BeyondarObject> beyondarObjects) {
+        if (beyondarObjects.size() > 0) {
+            Poi_details_call("ChIJbWShqpzYH0ARA_izn4n4cNA");
+        }
+    }
+
+    @Override
+    public void onTouchBeyondarView(MotionEvent event, ArBeyondarGLSurfaceView var2) {
+
+        float x = event.getX();
+        float y = event.getY();
+
+        ArrayList<BeyondarObject> geoObjects = new ArrayList<BeyondarObject>();
+
+        // This method call is better to don't do it in the UI thread!
+        // This method is also available in the BeyondarFragment
+        var2.getBeyondarObjectsOnScreenCoordinates(x, y, geoObjects);
+
+        String textEvent = "";
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                textEvent = "Event type ACTION_DOWN: ";
+                break;
+            case MotionEvent.ACTION_UP:
+                textEvent = "Event type ACTION_UP: ";
+                break;
+            case MotionEvent.ACTION_MOVE:
+                textEvent = "Event type ACTION_MOVE: ";
+                break;
+            default:
+                break;
+        }
+
+        Iterator<BeyondarObject> iterator = geoObjects.iterator();
+        while (iterator.hasNext()) {
+            BeyondarObject geoObject = iterator.next();
+            textEvent = textEvent + " " + geoObject.getName();
+            Log.d(TAG, "onTouchBeyondarView: ATTENTION !!! "+textEvent);
+
+            // ...
+            // Do something
+            // ...
+        }
+    }
+
+
+    // End Ar Navigation After Click
 
 
 }

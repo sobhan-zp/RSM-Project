@@ -1,79 +1,176 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MapsActivity">
 
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    <ProgressBar
+        android:id="@+id/dialog_brwoser_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:elevation="3dp"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/map" />
+
+
+
+    <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"  />
-
-
-
-
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.CardView
-        android:id="@+id/decode_cardview"
-        android:layout_width="match_parent"
+        android:id="@+id/dialog_place_detail"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="4dp">
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="4dp">
+            android:layout_margin="7dp"
+            android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/username_text_input_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/decode_box"
+                <TextView
+                    android:id="@+id/dialog_place_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:hint="@string/et_search_activity_main"
-                    android:maxLines="1"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="#bdbdbd" />
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="قصابی تهران"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
-            </android.support.design.widget.TextInputLayout>
+                <ImageButton
+                    android:id="@+id/dialog_place_close_btn"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/places_ic_clear" />
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/decode_btn"
-                android:layout_width="50dp"
-                android:layout_height="46dp"
-                android:layout_gravity="center"
-                android:background="@drawable/places_ic_search"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="#FFF"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/dialog_place_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:maxLines="3"
+                android:paddingTop="10dp"
+                android:text="@string/tv_address_poi"
+                android:textSize="20sp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/dialog_place_image"
+                        android:layout_width="200dp"
+                        android:layout_height="170dp"
+                        android:layout_margin="7dp"
+                        android:background="@drawable/amozesh1"
+                        android:scaleType="centerCrop" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/dialog_place_ar_direction"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/btn2_bg_dialogmap"
+                        android:gravity="center"
+                        android:text="مسیریابی تصویری" />
+
+
+                    <Button
+                        android:id="@+id/dialog_place_maps_direction"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/btn2_bg_dialogmap"
+                        android:gravity="center"
+                        android:text="مسیریابی نقشه" />
+
+                    <Button
+                        android:id="@+id/dialog_btn_holokit"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/btn3_bg_dialogmap"
+                        android:gravity="center"
+                        android:text="هولوکیت" />
+
+                    <Button
+                        android:id="@+id/dialog_btn_vr"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/btn1_bg_dialogmap"
+                        android:gravity="center"
+                        android:text="واقعیت مجازی" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
+
 
     </android.support.v7.widget.CardView>
 
 
-    <!-- <android.support.design.widget.FloatingActionButton
-         android:id="@+id/fb_mylocation_maps"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_gravity="bottom|start"
-         android:layout_margin="10dp"
-         app:rippleColor="@color/colorPressed"
-         android:src="@drawable/ic_gps" />-->
-
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>
