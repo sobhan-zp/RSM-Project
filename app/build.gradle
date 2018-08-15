@@ -87,4 +87,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     testImplementation 'junit:junit:4.12'
     implementation files('libs/beyondar-v0.9.3.jar')
+    implementation files('libs/EasyAR.jar')
 }

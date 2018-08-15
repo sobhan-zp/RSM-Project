@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -13,6 +12,7 @@ import com.android.volley.toolbox.Volley;
 import java.util.ArrayList;
 
 import pro.rasht.museum.ar.R;
+import pro.rasht.museum.ar.Model.Target;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 
@@ -36,7 +36,7 @@ public class AppController extends Application {
 
 
     public static ArrayList<String> TARGET_PATH = new ArrayList<>();
-    //public static ArrayList<Target> TARGET = new ArrayList<>();
+    public static ArrayList<Target> TARGET = new ArrayList<>();
     public static int TARGET_NUMBERS = 0;
 
 

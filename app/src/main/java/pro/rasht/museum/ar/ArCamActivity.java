@@ -34,7 +34,7 @@ import com.google.maps.android.SphericalUtil;
 import pro.rasht.museum.ar.ar.ArFragmentSupport;
 import pro.rasht.museum.ar.network.DirectionsResponse;
 import pro.rasht.museum.ar.network.RetrofitInterface;
-import pro.rasht.museum.ar.network.model.Step;
+import pro.rasht.museum.ar.network.Model.Step;
 import pro.rasht.museum.ar.utils.LocationCalc;
 
 

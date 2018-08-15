@@ -1,5 +1,5 @@
 
-package pro.rasht.museum.ar.network.model;
+package pro.rasht.museum.ar.network.Model;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

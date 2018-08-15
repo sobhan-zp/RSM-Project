@@ -1,10 +1,10 @@
 
-package pro.rasht.museum.ar.network.model;
+package pro.rasht.museum.ar.network.Model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class EndLocation {
+public class StartLocation {
 
     @SerializedName("lat")
     @Expose

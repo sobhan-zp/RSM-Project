@@ -69,7 +69,7 @@
                 android:value="pro.rasht.museum.ar.MapsActivity" />
         </activity>
         <activity android:name=".Activity.EnterProfileActivity" />
-        <activity android:name=".ArModuls.ArModulActivity" />
+        <activity android:name=".Activity.ArModulActivity" />
         <activity android:name=".Activity.BodyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -78,6 +78,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.PlaceActivity"></activity>
+
+
     </application>
 
 </manifest>

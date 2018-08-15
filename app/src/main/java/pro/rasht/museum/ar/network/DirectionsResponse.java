@@ -2,8 +2,8 @@ package pro.rasht.museum.ar.network;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import pro.rasht.museum.ar.network.model.GeocodedWaypoint;
-import pro.rasht.museum.ar.network.model.Route;
+import pro.rasht.museum.ar.network.Model.GeocodedWaypoint;
+import pro.rasht.museum.ar.network.Model.Route;
 
 import java.util.List;
 

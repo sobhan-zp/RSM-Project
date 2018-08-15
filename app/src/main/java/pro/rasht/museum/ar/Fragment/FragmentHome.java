@@ -16,7 +16,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
+import pro.rasht.museum.ar.Activity.ArModulActivity;
 import pro.rasht.museum.ar.MapsActivity;
 import pro.rasht.museum.ar.PoiBrowserActivity;
 import pro.rasht.museum.ar.R;
@@ -30,8 +30,8 @@ public class FragmentHome extends Fragment {
     @BindView(R.id.cv_vr_home)
     CardView cvVrHome;
     Unbinder unbinder;
-
-
+    @BindView(R.id.cv_ar_street_home)
+    CardView cvArStreetHome;
 
 
     private FragmentActivity context;
@@ -62,10 +62,7 @@ public class FragmentHome extends Fragment {
                 "test1");*/
 
 
-       /* loadTarget();*/
-
-
-
+        /* loadTarget();*/
 
 
         cvArHome.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +80,16 @@ public class FragmentHome extends Fragment {
         });
 
 
+        cvArStreetHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "مکان یابی تصویری", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(context, ArModulActivity.class));
+            }
+        });
+
+
+
         cvVrHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +98,6 @@ public class FragmentHome extends Fragment {
                 startActivity(intent);
             }
         });
-
 
 
         return view;
