@@ -50,7 +50,7 @@ public class AppController extends Application {
         super.onCreate();
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/irsans.ttf")
+                .setDefaultFontPath("fonts/irsans_Medium.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );

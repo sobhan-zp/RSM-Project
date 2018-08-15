@@ -1,5 +1,6 @@
 package pro.rasht.museum.ar.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.rasht.museum.ar.Classes.CircularImageView;
 import pro.rasht.museum.ar.R;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class EnterProfileActivity extends AppCompatActivity {
 
@@ -33,4 +35,11 @@ public class EnterProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 }

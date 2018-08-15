@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/img_avatar_gallery"
             android:text="Large Text"
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:layout_margin="10dp"
             android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceLarge" />

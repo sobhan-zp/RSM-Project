@@ -3,6 +3,7 @@ package pro.rasht.museum.ar.Activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import butterknife.ButterKnife;
 import pro.rasht.museum.ar.Fragment.Items_Viewpager_market;
 import pro.rasht.museum.ar.Fragment.NonSwipeableViewPager;
 import pro.rasht.museum.ar.R;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class BodyActivity extends AppCompatActivity {
@@ -193,6 +195,10 @@ public class BodyActivity extends AppCompatActivity {
         tv.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 
 

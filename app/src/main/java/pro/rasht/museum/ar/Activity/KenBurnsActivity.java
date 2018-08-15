@@ -1,8 +1,11 @@
 package pro.rasht.museum.ar.Activity;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by zp on 4/10/2018.
@@ -47,5 +50,13 @@ public abstract class KenBurnsActivity extends AppCompatActivity {
 
     protected abstract void onPlayClick();
     protected abstract void onPauseClick();
+
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+
 
 }

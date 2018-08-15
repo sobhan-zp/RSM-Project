@@ -10,14 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import pro.rasht.museum.ar.Activity.EnterProfileActivity;
-import pro.rasht.museum.ar.NavActivity;
+import pro.rasht.museum.ar.Activity.PlaceActivity;
+import pro.rasht.museum.ar.Classes.CircularImageView;
 import pro.rasht.museum.ar.R;
 
 public class FragmentProfile extends Fragment {
@@ -25,8 +24,11 @@ public class FragmentProfile extends Fragment {
 
     @BindView(R.id.btn_insert_profile)
     Button btnInsertProfile;
-
     Unbinder unbinder;
+    @BindView(R.id.profile_image)
+    CircularImageView profileImage;
+    @BindView(R.id.btn_insert_location_profile)
+    Button btnInsertLocationProfile;
     private FragmentActivity context;
     private View view;
     private LinearLayoutManager mLayoutManager;
@@ -53,6 +55,17 @@ public class FragmentProfile extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+
+        btnInsertLocationProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PlaceActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         ///java code
 

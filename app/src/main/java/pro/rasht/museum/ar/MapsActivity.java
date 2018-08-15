@@ -54,6 +54,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 
@@ -82,6 +83,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource;
 
@@ -194,6 +196,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
        /* Toast.makeText(this,
                 marker.getTitle() + " has been clicked " + " times.",
                 Toast.LENGTH_SHORT).show();*/
+
+        mMap.setOnPoiClickListener(new GoogleMap.OnPoiClickListener() {
+            @Override
+            public void onPoiClick(PointOfInterest pointOfInterest) {
+                Toast.makeText(context, ""+pointOfInterest.placeId, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
 
         Poi_details_call(poiResult.get(0).getPlaceId());
 
@@ -691,6 +702,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+
+
     public class PoiPhotoAsync extends AsyncTask<String,Void,Bitmap> {
 
         @Override
@@ -898,6 +911,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     // End Ar Navigation After Click
+
+
+
+
 
 
 }

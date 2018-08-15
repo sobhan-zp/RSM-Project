@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.rasht.museum.ar.R;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity implements ImageLoadingListener {
 
@@ -194,4 +195,13 @@ public class LoginActivity extends AppCompatActivity implements ImageLoadingList
         client.disconnect();*/
     }
     // End code for Intro App
+
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+
+
 }
