@@ -33,9 +33,7 @@ import com.beyondar.android.view.OnClickBeyondarObjectListener;
 import com.beyondar.android.world.BeyondarObject;
 import com.beyondar.android.world.World;
 
-/**
- * Created by Amal Krishnan on 27-03-2017.
- */
+
 
 public class ArFragmentSupport extends Fragment implements FpsUpdatable,OnClickListener,
         OnTouchListener{

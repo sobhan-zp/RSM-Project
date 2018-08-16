@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,7 +18,9 @@ import butterknife.Unbinder;
 import pro.rasht.museum.ar.Activity.EnterProfileActivity;
 import pro.rasht.museum.ar.Activity.PlaceActivity;
 import pro.rasht.museum.ar.Classes.CircularImageView;
+import pro.rasht.museum.ar.Classes.SavePref;
 import pro.rasht.museum.ar.R;
+import pro.rasht.museum.ar.network.AppController;
 
 public class FragmentProfile extends Fragment {
 
@@ -29,9 +32,26 @@ public class FragmentProfile extends Fragment {
     CircularImageView profileImage;
     @BindView(R.id.btn_insert_location_profile)
     Button btnInsertLocationProfile;
+
+
+    @BindView(R.id.tv_name_profile)
+    TextView tvNameProfile;
+    @BindView(R.id.tv_family_profile)
+    TextView tvFamilyProfile;
+    @BindView(R.id.tv_state_profile)
+    TextView tvStateProfile;
+    @BindView(R.id.tv_city_profile)
+    TextView tvCityProfile;
+    @BindView(R.id.tv_email_profile)
+    TextView tvEmailProfile;
+    @BindView(R.id.tv_phone_profile)
+    TextView tvPhoneProfile;
     private FragmentActivity context;
     private View view;
     private LinearLayoutManager mLayoutManager;
+
+
+    SavePref save;
 
     public static FragmentProfile newInstance() {
 
@@ -47,6 +67,8 @@ public class FragmentProfile extends Fragment {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         context = getActivity();
         unbinder = ButterKnife.bind(this, view);
+        save = new SavePref(context);
+
         //java code
         btnInsertProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +79,6 @@ public class FragmentProfile extends Fragment {
         });
 
 
-
         btnInsertLocationProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +86,16 @@ public class FragmentProfile extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+
+
+        tvNameProfile.append(save.load(AppController.SAVE_USER_Name, ""));
+        tvFamilyProfile.append(save.load(AppController.SAVE_USER_Family, ""));
+        tvStateProfile.append(save.load(AppController.SAVE_USER_STATE, ""));
+        tvCityProfile.append(save.load(AppController.SAVE_USER_CITY, ""));
+        tvPhoneProfile.append(save.load(AppController.SAVE_USER_MOBILE, ""));
+        tvEmailProfile.append(save.load(AppController.SAVE_USER_EMAIL, ""));
 
 
         ///java code

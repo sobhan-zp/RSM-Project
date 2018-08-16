@@ -17,11 +17,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pro.rasht.museum.ar.Classes.ImageUtil;
 import pro.rasht.museum.ar.Fragment.Items_Viewpager_market;
 import pro.rasht.museum.ar.Fragment.NonSwipeableViewPager;
+import pro.rasht.museum.ar.Model.Target;
 import pro.rasht.museum.ar.R;
+import pro.rasht.museum.ar.network.AppController;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
@@ -46,6 +58,8 @@ public class BodyActivity extends AppCompatActivity {
     @BindView(R.id.viewpager)
     NonSwipeableViewPager pager;
 
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +67,7 @@ public class BodyActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
+        loadTarget();
         pager = (NonSwipeableViewPager) findViewById(R.id.viewpager);
         Items_Viewpager_market adapter_articles = new Items_Viewpager_market(getSupportFragmentManager());
         pager.setAdapter(adapter_articles);
@@ -201,6 +216,45 @@ public class BodyActivity extends AppCompatActivity {
     }
 
 
+    private void loadTarget() {
+        JsonArrayRequest req = new JsonArrayRequest(AppController.URL_TARGET,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Log.e("TAG---------OK", response.toString());
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+
+                                JSONObject object = response.getJSONObject(i);
+                                String url = object.getString("url");
+
+                                Target target = new Target(
+                                        String.valueOf(i),
+                                        url.substring( url.lastIndexOf('/')+1, url.length() ),
+                                        object.getString("url"),
+                                        object.getString("value")
+                                );
+
+                                new ImageUtil(BodyActivity.this, target.getUrl(), target.getName());
+
+                                AppController.TARGET.add(target);
+                            }
+                            AppController.TARGET_NUMBERS = response.length();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("TAG------------Error", "Error: " + error.getMessage());
+            }
+        });
+        req.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(req, "loadTarget");
+    }
 
 
 }

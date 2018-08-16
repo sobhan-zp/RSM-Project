@@ -27,8 +27,21 @@ public class AppController extends Application {
 
     public final static String URL = "http://192.168.1.22/rashtpro/index.php/api/";
 
-    public final static String URL_TARGET = URL + "target/";
-    public final static String URL_TARGET_DETAIL = URL + "Target/detail/";
+    public final static String URL_TARGET = URL + "ar/";
+    public final static String URL_TARGET_DETAIL = URL + "ar/detail/";
+
+
+    public final static String URL_SIGNUP = URL + "user/signup";
+    public final static String SAVE_LOGIN = "SAVE_LOGIN";
+
+    public final static String SAVE_USER_ID = "SAVE_USER_ID";
+    public final static String SAVE_USER_Name = "SAVE_USER_NAME";
+    public final static String SAVE_USER_Family = "SAVE_USER_Family";
+    public final static String SAVE_USER_STATE = "SAVE_USER_STATE";
+    public final static String SAVE_USER_CITY = "SAVE_USER_CITY";
+    public final static String SAVE_USER_EMAIL = "SAVE_USER_EMAIL";
+    public final static String SAVE_USER_MOBILE = "SAVE_USER_MOBILE";
+    public final static String SAVE_USER_ACTIVE = "SAVE_USER_ACTIVE";
 
 
 

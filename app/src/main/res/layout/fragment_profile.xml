@@ -107,10 +107,11 @@
 
 
                         <TextView
+                            android:id="@+id/tv_name_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="نام"
+                            android:text="نام: "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -133,10 +134,11 @@
 
 
                         <TextView
+                            android:id="@+id/tv_family_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="نام خانوادگی"
+                            android:text="نام خانوادگی: "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -160,10 +162,11 @@
 
 
                         <TextView
+                            android:id="@+id/tv_state_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="استان"
+                            android:text="استان: "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -187,10 +190,11 @@
 
 
                         <TextView
+                            android:id="@+id/tv_city_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="شهر"
+                            android:text="شهر: "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -232,10 +236,11 @@
 
 
                         <TextView
+                            android:id="@+id/tv_phone_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="شماره همراه"
+                            android:text="شماره همراه: "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -257,10 +262,11 @@
 
 
                         <TextView
+                            android:id="@+id/tv_email_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="ایمیل"
+                            android:text="ایمیل: "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 

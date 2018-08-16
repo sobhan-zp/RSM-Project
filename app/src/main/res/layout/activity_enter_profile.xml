@@ -69,6 +69,7 @@
 
 
                         <EditText
+                            android:id="@+id/et_name_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
@@ -96,6 +97,7 @@
 
 
                         <EditText
+                            android:id="@+id/et_family_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
@@ -124,6 +126,7 @@
 
 
                         <EditText
+                            android:id="@+id/et_state_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
@@ -151,14 +154,22 @@
                         android:orientation="horizontal">
 
 
-                        <EditText
+                        <!--<EditText
+                            android:id="@+id/et_city_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="شهر"
                             android:padding="10dp"
                             android:textColor="@color/material_grey_600"
-                            android:textSize="16sp" />
+                            android:textSize="16sp" />-->
+
+
+                        <Spinner
+                            android:id="@+id/et_city_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp" />
 
 
                     </LinearLayout>
@@ -198,11 +209,16 @@
 
 
                         <EditText
+                            android:id="@+id/et_phone_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="شماره همراه"
                             android:padding="10dp"
+                            android:maxLength="12"
+                            android:inputType="phone"
+                            android:layout_gravity="right"
+                            android:gravity="right"
                             android:textColor="@color/material_grey_600"
                             android:textSize="16sp" />
 
@@ -224,10 +240,14 @@
 
 
                         <EditText
+                            android:id="@+id/et_email_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="ایمیل"
+                            android:inputType="textEmailAddress"
+                            android:layout_gravity="right"
+                            android:gravity="right"
                             android:padding="10dp"
                             android:textColor="@color/material_grey_600"
                             android:textSize="16sp" />
