@@ -7,6 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -27,6 +29,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pro.rasht.museum.ar.Adapter.Place_ExpandableRecyclerViewAdapter;
 import pro.rasht.museum.ar.Classes.CircularImageView;
 import pro.rasht.museum.ar.Classes.SavePref;
 import pro.rasht.museum.ar.R;
@@ -57,6 +60,8 @@ public class PlaceActivity extends AppCompatActivity {
     ArrayAdapter adapter;
     @BindView(R.id.img_map_place)
     ImageView imgMapPlace;
+    @BindView(R.id.rv_place)
+    RecyclerView rvPlace;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,16 +117,15 @@ public class PlaceActivity extends AppCompatActivity {
             }
         });
 
-        //fillcity();
-
         imgMapPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(PlaceActivity.this , MapPlaceActivity.class);
+                Intent i = new Intent(PlaceActivity.this, MapPlaceActivity.class);
                 startActivity(i);
             }
         });
 
+        initiateExpander();
 
     }
 
@@ -247,6 +251,47 @@ public class PlaceActivity extends AppCompatActivity {
         city.add("يزد");
 
         adapter.notifyDataSetChanged();
+    }
+
+
+    //Expander
+    private void initiateExpander() {
+
+        ArrayList<String> parentList = new ArrayList<>();
+        ArrayList<ArrayList> childListHolder = new ArrayList<>();
+
+        parentList.add("Fruits & Vegetables");
+        parentList.add("Beverages & Health");
+        parentList.add("Home & Kitchen");
+
+        ArrayList<String> childNameList = new ArrayList<>();
+        childNameList.add("Apple");
+        childNameList.add("Mango");
+        childNameList.add("Banana");
+
+        childListHolder.add(childNameList);
+
+        childNameList = new ArrayList<>();
+        childNameList.add("Red bull");
+        childNameList.add("Maa");
+        childNameList.add("Horlicks");
+
+        childListHolder.add(childNameList);
+
+        childNameList = new ArrayList<>();
+        childNameList.add("Knife");
+        childNameList.add("Vessels");
+        childNameList.add("Spoons");
+
+        childListHolder.add(childNameList);
+
+        Place_ExpandableRecyclerViewAdapter expandableCategoryRecyclerViewAdapter =
+                new Place_ExpandableRecyclerViewAdapter(getApplicationContext(), parentList,
+                        childListHolder);
+
+        rvPlace.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        rvPlace.setAdapter(expandableCategoryRecyclerViewAdapter);
     }
 
 

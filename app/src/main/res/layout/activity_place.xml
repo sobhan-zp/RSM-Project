@@ -173,12 +173,7 @@
                             android:padding="10dp" />-->
 
 
-
                     </LinearLayout>
-
-
-
-
 
 
                 </LinearLayout>
@@ -187,59 +182,79 @@
             </android.support.v7.widget.CardView>
 
 
+            <!-- Card View 2 -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_info2_enter_profile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/ll_img_enter_profile"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="50dp">
 
 
-
-
-                <!-- Card View 3 -->
-                <android.support.v7.widget.CardView
-                    android:id="@+id/cv_info3_enter_profile"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/cv_info1_enter_profile"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginTop="30dp">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
 
-                    <LinearLayout
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_place"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_height="wrap_content">
+
+                    </android.support.v7.widget.RecyclerView>
 
 
-                        <!-- Map -->
-                        <LinearLayout
-                            android:id="@+id/ll_map_profile"
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <!-- Card View 3 -->
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_info3_enter_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cv_info1_enter_profile"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="30dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+
+                    <!-- Map -->
+                    <LinearLayout
+                        android:id="@+id/ll_map_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:id="@+id/img_map_place"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
-                            android:orientation="horizontal">
-
-
-                            <ImageView
-                                android:id="@+id/img_map_place"
-                                android:layout_width="match_parent"
-                                android:layout_height="200dp"
-                                android:background="@drawable/map"/>
-
-
-
-
-                        </LinearLayout>
+                            android:background="@drawable/map" />
 
 
                     </LinearLayout>
 
 
-                </android.support.v7.widget.CardView>
+                </LinearLayout>
 
 
-
-
-
-
+            </android.support.v7.widget.CardView>
 
 
             <Button
