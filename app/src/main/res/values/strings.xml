@@ -107,7 +107,6 @@
     </string>
 
 
-
     <string name="txt_title_map_home">مسیریابی تصویری</string>
     <string name="txt_desc_map_home">مسیریابی تصویری همراه با
 
@@ -117,8 +116,6 @@
     </string>
 
 
-
-
     <string name="map_api_key">AIzaSyBdnGCVMWokypaPplS8axxs-fFD1K9W-Oc</string>
     <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="trip_starts_in_2_days">TRIP STARTS IN 2 DAYS</string>
@@ -126,6 +123,16 @@
     <string name="monkey_forest">Monkey Forest</string>
     <string name="sign_up_for_this">SIGN UP FOR THIS</string>
     <string name="mapPlaceholderTransition">mapPlaceholderTransition</string>
+
+
+    <!--Fetch Address-->
+    <string name="no_geocoder_available">No geocoder available</string>
+    <string name="fetch_address">Fetch address</string>
+    <string name="address_found">Address found</string>
+    <string name="no_address_found">Sorry, no address found</string>
+    <string name="no_location_data_provided">No location data provided</string>
+    <string name="service_not_available">Sorry, the service is not available</string>
+    <string name="invalid_lat_long_used">Invalid latitude or longitude used</string>
 
 
 </resources>

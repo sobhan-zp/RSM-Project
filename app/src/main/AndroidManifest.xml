@@ -77,9 +77,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.PlaceActivity"></activity>
-
-
+        <activity android:name=".Activity.PlaceActivity" />
+        <activity android:name=".Activity.MapPlaceActivity"></activity>
     </application>
 
 </manifest>

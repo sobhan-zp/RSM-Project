@@ -12,12 +12,11 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.android.gms.maps.SupportMapFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,34 +38,34 @@ public class PlaceActivity extends AppCompatActivity {
 
     @BindView(R.id.enter_place_image)
     CircularImageView enterPlaceImage;
-    @BindView(R.id.et_fname_place)
-    EditText etFnamePlace;
-    @BindView(R.id.et_lname_place)
-    EditText etLnamePlace;
-    @BindView(R.id.et_state_place)
-    EditText etStatePlace;
-    @BindView(R.id.et_city_place)
-    Spinner etCityPlace;
+    @BindView(R.id.et_name_place)
+    EditText etNamePlace;
+    @BindView(R.id.et_desc_place)
+    EditText etDescPlace;
+    @BindView(R.id.et_address_place)
+    EditText etAddressPlace;
     @BindView(R.id.et_mobile_place)
     EditText etMobilePlace;
-    @BindView(R.id.et_email_place)
-    EditText etEmailPlace;
+
 
     @BindView(R.id.btn_next_place)
     Button btnNextPlace;
-    
+
     SavePref save;
     ProgressDialog dialog;
     ArrayList<String> city;
     ArrayAdapter adapter;
+    @BindView(R.id.img_map_place)
+    ImageView imgMapPlace;
 
-    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place);
+
         ButterKnife.bind(this);
         save = new SavePref(this);
-        dialog=new ProgressDialog(this);
+        dialog = new ProgressDialog(this);
 
         btnNextPlace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,68 +78,51 @@ public class PlaceActivity extends AppCompatActivity {
                 }
 
 
-                if (etFnamePlace.getText().toString().length() <= 1) {
+                if (etNamePlace.getText().toString().length() <= 1) {
 
-                    AppController.message(PlaceActivity.this, "لطفا نام خود را وارد کنید");
-                    etFnamePlace.requestFocus();
+                    AppController.message(PlaceActivity.this, "لطفا نام مکان را وارد کنید");
+                    etNamePlace.requestFocus();
                     return;
 
-                }else if (etLnamePlace.getText().toString().length() <= 1) {
+                } else if (etDescPlace.getText().toString().length() <= 1) {
 
-                    AppController.message(PlaceActivity.this, "لطفا نام خانوادگی را وارد کنید");
-                    etLnamePlace.requestFocus();
-                    return;
-
-                }else if (etStatePlace.getText().toString().length() <= 1) {
-
-                    AppController.message(PlaceActivity.this, "لطفا استان را وارد کنید");
-                    etStatePlace.requestFocus();
-                    return;
-
-
-                /*} else if (!etPhoneProfile.getText().toString().matches("(\\+98|0)?9\\d{9}")) {
-
-
-                    AppController.message(PlaceActivity.this, "لطفا شماره موبایل را درست وارد کنید");
-                    etPhoneProfile.requestFocus();
-                    return;*/
-
-
-                } else if (etEmailPlace.getText().toString().length() > 0 && !AppController.isValidEmail(etEmailPlace.getText().toString())) {
-
-
-                    AppController.message(PlaceActivity.this, "لطفا ایمیل را درست وارد کنید");
-                    etEmailPlace.requestFocus();
+                    AppController.message(PlaceActivity.this, "لطفا توضیحات خود را وارد کنید");
+                    etDescPlace.requestFocus();
                     return;
 
                 } else {
 
-                    save.save(AppController.SAVE_USER_Name, etFnamePlace.getText().toString());
-                    save.save(AppController.SAVE_USER_Family, etLnamePlace.getText().toString());
-                    save.save(AppController.SAVE_USER_STATE, etStatePlace.getText().toString());
-                    save.save(AppController.SAVE_USER_CITY, city.get(etCityPlace.getSelectedItemPosition()));
+                    save.save(AppController.SAVE_USER_Name, etNamePlace.getText().toString());
+                    save.save(AppController.SAVE_USER_Family, etDescPlace.getText().toString());
+                    save.save(AppController.SAVE_USER_CITY, etAddressPlace.getText().toString());
                     save.save(AppController.SAVE_USER_MOBILE, etMobilePlace.getText().toString());
-                    save.save(AppController.SAVE_USER_EMAIL, etEmailPlace.getText().toString());
 
                     dialog.setMessage("ورود...");
                     dialog.show();
                     signup(
-                            etFnamePlace.getText().toString(),
-                            etLnamePlace.getText().toString(),
+                            etNamePlace.getText().toString(),
+                            etDescPlace.getText().toString(),
                             etMobilePlace.getText().toString(),
-                            String.valueOf(etCityPlace.getSelectedItemPosition()),
-                            etStatePlace.getText().toString(),
-                            etEmailPlace.getText().toString()
+                            etAddressPlace.getText().toString()
+                            //String.valueOf(etCityPlace.getSelectedItemPosition()),
                     );
                 }
 
 
-
             }
         });
-        
-        fillcity();
-        
+
+        //fillcity();
+
+        imgMapPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(PlaceActivity.this , MapPlaceActivity.class);
+                startActivity(i);
+            }
+        });
+
+
     }
 
 
@@ -158,26 +140,13 @@ public class PlaceActivity extends AppCompatActivity {
     }
 
 
-    private void signup(String fname, String lname, String phone,String city ,  String state , String email) {
+    private void signup(String fname, String lname, String phone, String city) {
 
         Map<String, String> params = new HashMap<>();
         params.put("fname", fname);
         params.put("lname", lname);
         params.put("phone", phone);
         params.put("city", city);
-        params.put("state", state);
-        params.put("email", email);
-
-
-
-
-
-
-
-
-
-
-
 
 
         CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST, AppController.URL_SIGNUP, params, new Response.Listener<JSONObject>() {
@@ -222,14 +191,12 @@ public class PlaceActivity extends AppCompatActivity {
     }
 
 
-
-
     private void fillcity() {
         city = new ArrayList<>();
 
         adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, city);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        etCityPlace.setAdapter(adapter);
+        //tCityPlace.setAdapter(adapter);
 
         city.add("آستارا");
         city.add("آستانه اشرفیه");
