@@ -25,7 +25,7 @@ public class AppController extends Application {
     public static final String TAG = AppController.class.getSimpleName();
 
 
-    public final static String URL = "http://192.168.1.22/rashtpro/index.php/api/";
+    public final static String URL = "http://archism.direct/rsm/rashtpro/index.php/api/";
 
     public final static String URL_TARGET = URL + "ar/";
     public final static String URL_TARGET_DETAIL = URL + "ar/detail/";

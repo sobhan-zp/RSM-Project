@@ -13,6 +13,11 @@ public class Viewport {
     @Expose
     private Southwest southwest;
 
+    public Viewport(Northeast northeast, Southwest southwest) {
+        this.northeast = northeast;
+        this.southwest = southwest;
+    }
+
     public Northeast getNortheast() {
         return northeast;
     }

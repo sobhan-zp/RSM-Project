@@ -13,6 +13,11 @@ public class Geometry {
     @Expose
     private Viewport viewport;
 
+    public Geometry(Location location, Viewport viewport) {
+        this.location = location;
+        this.viewport = viewport;
+    }
+
     public Location getLocation() {
         return location;
     }

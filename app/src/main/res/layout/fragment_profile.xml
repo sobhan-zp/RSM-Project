@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <LinearLayout
+                <LinearLayout
                 android:id="@+id/ll_img_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             </LinearLayout>
 
 
-            <!-- button profile -->
+                <!-- button profile -->
 
 
 
@@ -213,7 +213,6 @@
                 android:id="@+id/cv_info2_profile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/cv_info1_profile"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="30dp"
@@ -274,10 +273,45 @@
                     </LinearLayout>
 
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/material_grey_200" />
+
+                    <!-- Exit -->
+                    <LinearLayout
+                        android:id="@+id/li_exit_profil"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:id="@+id/tv_exit_profile"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="10dp"
+                            android:gravity="right"
+                            android:text="خروج از حساب کاربری"
+                            android:textSize="14sp" />
+
+
+                    </LinearLayout>
+
+
                 </LinearLayout>
 
 
+
+
+
+
             </android.support.v7.widget.CardView>
+
+
 
 
 

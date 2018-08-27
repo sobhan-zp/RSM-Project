@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content">
 
                     <pro.rasht.museum.ar.Classes.CircularImageView
-                        android:id="@+id/enter_profile_image"
+                        android:id="@+id/enter_place_image"
                         android:layout_width="80dp"
                         android:layout_height="70dp"
                         android:layout_gravity="center"
@@ -62,17 +62,19 @@
 
                     <!-- F name -->
                     <LinearLayout
-                        android:id="@+id/ll_fname_enter_profile"
+                        android:id="@+id/ll_fname_place"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
 
                         <EditText
+                            android:id="@+id/et_fname_place"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="نام"
+                            android:text="as"
                             android:padding="10dp"
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
@@ -88,7 +90,7 @@
                         android:background="@color/material_grey_200" />
 
                     <LinearLayout
-                        android:id="@+id/ll_lname_enter_profile"
+                        android:id="@+id/ll_lname_place"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ll_fname_enter_profile"
@@ -96,10 +98,12 @@
 
 
                         <EditText
+                            android:id="@+id/et_lname_place"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="نام خانوادگی"
+                            android:text="as"
                             android:padding="10dp"
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
@@ -124,10 +128,12 @@
 
 
                         <EditText
+                            android:id="@+id/et_state_place"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="استان"
+                            android:text="as"
                             android:padding="10dp"
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
@@ -151,14 +157,23 @@
                         android:orientation="horizontal">
 
 
-                        <EditText
+                       <!-- <EditText
+                            android:id="@+id/et_city_place"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="شهر"
                             android:padding="10dp"
                             android:textColor="@color/material_grey_600"
-                            android:textSize="14sp" />
+                            android:textSize="14sp" />-->
+
+
+                        <Spinner
+                            android:id="@+id/et_city_place"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp" />
+
 
 
                     </LinearLayout>
@@ -198,10 +213,12 @@
 
 
                         <EditText
+                            android:id="@+id/et_mobile_place"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="شماره همراه"
+                            android:text="09111358524"
                             android:padding="10dp"
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
@@ -224,10 +241,12 @@
 
 
                         <EditText
+                            android:id="@+id/et_email_place"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="ایمیل"
+                            android:text="a@sd.com"
                             android:padding="10dp"
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
@@ -261,18 +280,34 @@
                     android:padding="16dp">
 
 
-                    <!-- F name -->
+                    <!-- Map -->
                     <LinearLayout
                         android:id="@+id/ll_map_profile"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="150dp"
                         android:orientation="horizontal">
 
 
-                        <ImageView
+                        <!--<ImageView
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
-                            android:background="@drawable/map"/>
+                            android:background="@drawable/map"/>-->
+
+
+                        <br.com.simplepass.mapfragmentwrapper.MapFragmentWrapper
+                            android:id="@+id/map_wrapper"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <fragment
+                                android:id="@+id/map_place"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                class="com.google.android.gms.maps.SupportMapFragment"/>
+
+                        </br.com.simplepass.mapfragmentwrapper.MapFragmentWrapper>
+
+
 
 
                     </LinearLayout>
@@ -286,7 +321,7 @@
 
 
             <Button
-                android:id="@+id/btn_next_enter_profile"
+                android:id="@+id/btn_next_place"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="center"

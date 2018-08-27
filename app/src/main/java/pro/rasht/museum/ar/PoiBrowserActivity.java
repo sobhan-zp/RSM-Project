@@ -50,7 +50,13 @@ import pro.rasht.museum.ar.ar.OnTouchBeyondarViewListenerMod;
 import pro.rasht.museum.ar.network.PlaceResponse;
 import pro.rasht.museum.ar.network.PoiResponse;
 import pro.rasht.museum.ar.network.RetrofitInterface;
+import pro.rasht.museum.ar.network.poi.Geometry;
+import pro.rasht.museum.ar.network.poi.Northeast;
+import pro.rasht.museum.ar.network.poi.OpeningHours;
+import pro.rasht.museum.ar.network.poi.Photo;
 import pro.rasht.museum.ar.network.poi.Result;
+import pro.rasht.museum.ar.network.poi.Southwest;
+import pro.rasht.museum.ar.network.poi.Viewport;
 import pro.rasht.museum.ar.utils.UtilsCheck;
 
 
@@ -208,6 +214,60 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
                 seekbar_cardview.setVisibility(View.VISIBLE);
 
                 List<Result> poiResult=response.body().getResults();
+
+                Log.e("MAZIAR----------------" , "------------------------------------------------");
+
+
+
+               /* for (int i = 0; i < poiResult.size(); i++) {
+                    Result result = poiResult.get(i);
+                    Log.e("DETAIL----" , "" + result.getName());
+                }*/
+
+
+                poiResult.clear();
+
+
+                Result result = new Result();
+
+                Geometry geometry = new Geometry(
+                        new pro.rasht.museum.ar.network.poi.Location(37.284023f, 49.574364f),
+                        new Viewport(
+                                new Northeast(37.2870085802915f, 49.58108808029149f),
+                                new Southwest(37.2843106197085f, 49.5783901197085f)
+                        )
+                );
+
+                List<Photo> photoList = new ArrayList<>();
+                List<String> htmlList = new ArrayList<>();
+                htmlList.add("<a href=\"https://maps.google.com/maps/contrib/109471291971103535103/photos\">Naser Tavala</a>");
+                photoList.add(new Photo(1152,
+                        htmlList,
+                        "CmRaAAAAsJM2ylVd7CqEPm6zDBjJu7YSBiwMOgaBaZBkqmg-Z8UVvXOfOjuQKBwl1zMFYkhFQY4maxuHbRB5k2sx8IVnZaw7UKEZSgj0SzSal2BpXEEMuJ-oOx-ssCsIQbZ4km6_EhAF2sM0Rnh8uYVl_xP2YLJJGhSZbTujy8qMaWwvGTrI6RP71GX_Yg",
+                        2048));
+
+                List<String> typeList = new ArrayList<>();
+                typeList.add("local_government_office");
+                typeList.add("point_of_interest");
+                typeList.add("establishment");
+
+
+                result.setGeometry(geometry);
+                result.setIcon("https://maps.gstatic.com/mapfiles/place_api/icons/civic_building-71.png");
+                result.setId("c49dcd1fc8bad9bd06ce617826d2279aac62165e");
+                result.setName("اداره کل هواشناسی استان گیلان");
+                result.setOpeningHours(new OpeningHours(true));
+                result.setPhotos(photoList);
+                result.setPlaceId("ChIJS54XFpzYH0ARMakgPC8CIfw");
+                result.setRating(3.9f);
+                result.setReference("CmRSAAAAtnAC2kB9ZreSEIhvhDKQbIDZW_1keGl6M8BnVtQXj4q4RPWJG6pwZHhm-ztZLI61sK_JEpR7FEHro9ZdC2IZ6FfsPb3PDrF6pZKMERlgJJKxskY-V_saFU2Xc9yR5-7BEhCL-VMGfP7o3m5CSTuS62yeGhQ0sRaX-tT-35cF1fqpXSq6LTMeCA");
+                result.setScope("GOOGLE");
+                result.setTypes(typeList);
+                result.setVicinity("Rasht, رشت .بلوار معلم, Moalem Boulevard");
+
+                poiResult.add(result);
+
+                Log.e("MAZIAR----------------" , "------------------------------------------------");
 
                 Configure_AR(poiResult);
             }

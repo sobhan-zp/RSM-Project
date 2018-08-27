@@ -20,6 +20,13 @@ public class Photo {
     @Expose
     private Integer width;
 
+    public Photo(Integer height, List<String> htmlAttributions, String photoReference, Integer width) {
+        this.height = height;
+        this.htmlAttributions = htmlAttributions;
+        this.photoReference = photoReference;
+        this.width = width;
+    }
+
     public Integer getHeight() {
         return height;
     }

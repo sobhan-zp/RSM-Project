@@ -584,7 +584,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 poiResult=response.body().getResults();
 
 
-                Log.e("MAZIAR----------------" , "------------------------------------------------");
+
 
                 Configure_AR(poiResult);
             }

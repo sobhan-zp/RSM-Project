@@ -13,6 +13,11 @@ public class Southwest {
     @Expose
     private Float lng;
 
+    public Southwest(Float lat, Float lng) {
+        this.lat = lat;
+        this.lng = lng;
+    }
+
     public Float getLat() {
         return lat;
     }

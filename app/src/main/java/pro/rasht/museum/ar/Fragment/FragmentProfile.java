@@ -10,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import pro.rasht.museum.ar.Activity.BodyActivity;
 import pro.rasht.museum.ar.Activity.EnterProfileActivity;
 import pro.rasht.museum.ar.Activity.PlaceActivity;
 import pro.rasht.museum.ar.Classes.CircularImageView;
@@ -46,6 +48,8 @@ public class FragmentProfile extends Fragment {
     TextView tvEmailProfile;
     @BindView(R.id.tv_phone_profile)
     TextView tvPhoneProfile;
+    @BindView(R.id.li_exit_profil)
+    LinearLayout liExitProfil;
     private FragmentActivity context;
     private View view;
     private LinearLayoutManager mLayoutManager;
@@ -87,7 +91,15 @@ public class FragmentProfile extends Fragment {
             }
         });
 
+        liExitProfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                save.save(AppController.SAVE_LOGIN, "0");
+                startActivity(new Intent(context, BodyActivity.class));
+                getActivity().finish();
+            }
+        });
 
 
         tvNameProfile.append(save.load(AppController.SAVE_USER_Name, ""));
