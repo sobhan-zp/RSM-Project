@@ -79,6 +79,8 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$supportLibVersion"
     implementation 'com.github.florent37:diagonallayout:1.0.2'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
+    //material dialog
+    implementation 'com.afollestad.material-dialogs:core:0.8.6.1'
 
 
 

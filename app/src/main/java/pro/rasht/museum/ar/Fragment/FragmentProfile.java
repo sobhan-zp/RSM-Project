@@ -16,9 +16,9 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import pro.rasht.museum.ar.Activity.AddPlaceActivity;
 import pro.rasht.museum.ar.Activity.BodyActivity;
 import pro.rasht.museum.ar.Activity.EnterProfileActivity;
-import pro.rasht.museum.ar.Activity.PlaceActivity;
 import pro.rasht.museum.ar.Classes.CircularImageView;
 import pro.rasht.museum.ar.Classes.SavePref;
 import pro.rasht.museum.ar.R;
@@ -86,7 +86,7 @@ public class FragmentProfile extends Fragment {
         btnInsertLocationProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, PlaceActivity.class);
+                Intent intent = new Intent(context, AddPlaceActivity.class);
                 startActivity(intent);
             }
         });

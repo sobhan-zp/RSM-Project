@@ -133,6 +133,17 @@
     <string name="no_location_data_provided">No location data provided</string>
     <string name="service_not_available">Sorry, the service is not available</string>
     <string name="invalid_lat_long_used">Invalid latitude or longitude used</string>
+    <string name="tv_ex_place">در این قسمت تصویر شاخص و کلیپ مورد نظر خودرا که به صورت واقعیت افزوده نمایش داده میشود ، انتخاب میکنید</string>
+
+
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="permission_message">Please grant location permission so that we can show you better results</string>
+    <string name="permission_title">Location permission</string>
+    <string name="permission_loc_message">Location permission is required to find nearby Restraunts</string>
+    <string name="location_permission_toast">Please provide location permissions from the settings</string>
+
 
 
 </resources>
