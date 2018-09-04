@@ -90,8 +90,7 @@ public class AddPlaceActivity extends AppCompatActivity {
     //choose image and video
     private static final String IMAGE_DIRECTORY = "/demonuts";
 
-    private int GALLERY = 1, CAMERA = 2;
-    private static final int SELECT_VIDEO = 3;
+    private int GALLERY = 1, CAMERA = 2 , SELECT_VIDEO = 3;
     private String selectedPath;
 
 
@@ -443,10 +442,26 @@ public class AddPlaceActivity extends AppCompatActivity {
             btnControllerVideo.setVisibility(View.VISIBLE);
             System.out.println("SELECT_VIDEO");
             Uri selectedImageUri = data.getData();
-            Log.e("1--------------" , String.valueOf(selectedImageUri.getPath()));
             selectedPath = getPath(selectedImageUri);
-            Log.e("2--------------" , String.valueOf(selectedPath));
             videoArPlace.setVideoPath(selectedPath);
+
+            btnControllerVideo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (videoArPlace.isPlaying()) {
+                        btnControllerVideo.setImageResource(R.drawable.ic_play);
+                        videoArPlace.pause();
+                    } else {
+
+                        btnControllerVideo.setImageResource(R.drawable.ic_pause);
+                        videoArPlace.start();
+                    }
+                }
+            });
+
+
+            videoArPlace.start();
         }
     }
 

@@ -58,11 +58,18 @@ import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -74,6 +81,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import pro.rasht.museum.ar.ar.ArBeyondarGLSurfaceView;
 import pro.rasht.museum.ar.ar.ArFragmentSupport;
 import pro.rasht.museum.ar.ar.OnTouchBeyondarViewListenerMod;
+import pro.rasht.museum.ar.network.DirectionsJSONParser;
 import pro.rasht.museum.ar.network.PlaceResponse;
 import pro.rasht.museum.ar.network.PoiResponse;
 import pro.rasht.museum.ar.network.RetrofitInterface;
@@ -118,6 +126,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static LatLng fromPosition = null;
     private static LatLng toPosition = null;
+    private static LatLng clickPosition = null;
 
     private static final LatLng LOWER_MANHATTAN = new LatLng(37.283788, -49.563508);
     private static final LatLng TIMES_SQUARE = new LatLng(37.286127, 49.576188);
@@ -196,6 +205,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
        /* Toast.makeText(this,
                 marker.getTitle() + " has been clicked " + " times.",
                 Toast.LENGTH_SHORT).show();*/
+
+        clickPosition = marker.getPosition();
 
         mMap.setOnPoiClickListener(new GoogleMap.OnPoiClickListener() {
             @Override
@@ -397,7 +408,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(fromResource(R.mipmap.ic_map)));
 
         // 3D Map
-        CameraPosition Library = CameraPosition.builder().target(new LatLng(37.279151, 49.579599))
+        CameraPosition Library = CameraPosition.builder().target(new LatLng(location.getLatitude(), location.getLongitude()))
                 .zoom(16)
                 .tilt(45).build();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(Library));
@@ -650,7 +661,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 dialog_place_maps_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent;
+
+
+
+                        String url = getDirectionsUrl(
+                                new LatLng(location.getLatitude(), location.getLongitude()),
+                                clickPosition);
+                        DownloadTask downloadTask = new DownloadTask();
+                        downloadTask.execute(url);
+
+                        dialog_cardview_close_btn.performClick();
+
+                        /*Intent intent;
                         try{
                             Uri.Builder builder = new Uri.Builder();
                             builder.scheme("http")
@@ -668,6 +690,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Log.d(TAG, "onClick: mapNav Exception caught");
                             Toast.makeText(MapsActivity.this, getString(R.string.error_openmap_poiActivity), Toast.LENGTH_SHORT).show();
                         }
+                        */
                     }
                 });
 
@@ -718,7 +741,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             Bitmap bitmap = null;
             try {
-                InputStream input = new java.net.URL(imageURL).openStream();
+                InputStream input = new URL(imageURL).openStream();
                 bitmap = BitmapFactory.decodeStream(input);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -914,6 +937,153 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+
+
+
+    private class DownloadTask extends AsyncTask<String,Void,String> {
+
+        @Override
+        protected String doInBackground(String... url) {
+
+            String data = "";
+
+            try {
+                data = downloadUrl(url[0]);
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParserTask parserTask = new ParserTask();
+            parserTask.execute(result);
+
+        }
+
+    }
+
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap>>> {
+
+        // Parsing the data in non-ui thread
+        @Override
+        protected List<List<HashMap>> doInBackground(String... jsonData) {
+
+            JSONObject jObject;
+            List<List<HashMap>> routes = null;
+
+            try {
+                jObject = new JSONObject(jsonData[0]);
+                DirectionsJSONParser parser = new DirectionsJSONParser();
+
+                routes = parser.parse(jObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap>> result) {
+            ArrayList<LatLng> points = null;
+            PolylineOptions lineOptions = null;
+            MarkerOptions markerOptions = new MarkerOptions();
+
+            mMap.clear();
+            addMarkers();
+
+            for (int i = 0; i < result.size(); i++)
+            {
+                points = new ArrayList<>();
+                lineOptions = new PolylineOptions();
+
+                List<HashMap> path = result.get(i);
+
+                for (int j = 0; j < path.size(); j++)
+                {
+                    HashMap point = path.get(j);
+
+                    double lat = Double.parseDouble(String.valueOf(point.get("lat")));
+                    double lng = Double.parseDouble(String.valueOf(point.get("lng")));
+                    LatLng position = new LatLng(lat, lng);
+
+                    points.add(position);
+                }
+
+                lineOptions.addAll(points);
+                lineOptions.width(12);
+                lineOptions.color(Color.parseColor("#3374ba"));
+                lineOptions.geodesic(true);
+
+            }
+
+            // Drawing polyline in the Google Map for the i-th route
+            mMap.addPolyline(lineOptions);
+        }
+    }
+
+    private String getDirectionsUrl(LatLng origin, LatLng dest) {
+
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+
+        // Sensor enabled
+        String sensor = "sensor=false";
+        String mode = "mode=driving";
+
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
+
+        // Output format
+        String output = "json";
+
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+
+
+        return url;
+    }
+
+    private String downloadUrl(String strUrl) throws IOException {
+        String data = "";
+        InputStream iStream = null;
+        HttpURLConnection urlConnection = null;
+        try {
+            URL url = new URL(strUrl);
+
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.connect();
+
+            iStream = urlConnection.getInputStream();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+
+            StringBuffer sb = new StringBuffer();
+
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            data = sb.toString();
+
+            br.close();
+
+        } catch (Exception e) {
+            Log.d("Exception", e.toString());
+        } finally {
+            iStream.close();
+            urlConnection.disconnect();
+        }
+        return data;
+    }
 
 
 
