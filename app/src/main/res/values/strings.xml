@@ -136,14 +136,15 @@
     <string name="tv_ex_place">در این قسمت تصویر شاخص و کلیپ مورد نظر خودرا که به صورت واقعیت افزوده نمایش داده میشود ، انتخاب میکنید</string>
 
 
-
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="permission_message">Please grant location permission so that we can show you better results</string>
     <string name="permission_title">Location permission</string>
     <string name="permission_loc_message">Location permission is required to find nearby Restraunts</string>
     <string name="location_permission_toast">Please provide location permissions from the settings</string>
-
+    <string name="tv_network">اتصال به اینترنت برقرار نمی باشد</string>
+    <string name="tv_network_try_wifi">اینرنت Wi-fi</string>
+    <string name="tv_network_try_data">اینرنت موبایل</string>
 
 
 </resources>

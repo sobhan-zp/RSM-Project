@@ -5,7 +5,10 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -37,7 +40,7 @@ import pro.rasht.museum.ar.network.AppController;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-public class BodyActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.img_profile_body)
     ImageView imgProfileBody;
@@ -66,6 +69,7 @@ public class BodyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        NetworkError();
 
         loadTarget();
         pager = (NonSwipeableViewPager) findViewById(R.id.viewpager);
@@ -187,17 +191,6 @@ public class BodyActivity extends AppCompatActivity {
     }
 
 
-    /*protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(this, data);
-
-                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                        .getPlaceById(mGoogleApiClient, place.getId());
-                placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-            }
-        }
-    }*/
 
 
 
@@ -235,7 +228,7 @@ public class BodyActivity extends AppCompatActivity {
                                         object.getString("value")
                                 );
 
-                                new ImageUtil(BodyActivity.this, target.getUrl(), target.getName());
+                                new ImageUtil(MainActivity.this, target.getUrl(), target.getName());
 
                                 AppController.TARGET.add(target);
                             }
@@ -254,6 +247,26 @@ public class BodyActivity extends AppCompatActivity {
         });
         req.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(req, "loadTarget");
+    }
+
+
+    public void NetworkError(){
+
+        if (!isNetworkAvailable()) {
+            AppController.message(MainActivity.this, "لطفا اتصال به اینترنت خود را برسی کنید");
+            Intent i = new Intent(MainActivity.this , NetworkErrorActivity.class);
+            startActivity(i);
+            return;
+        }
+
+    }
+
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 

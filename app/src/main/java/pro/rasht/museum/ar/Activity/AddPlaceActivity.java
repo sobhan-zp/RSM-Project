@@ -204,7 +204,7 @@ public class AddPlaceActivity extends AppCompatActivity {
                         //save.save(AppController.SAVE_USER_ID, resp.getString("id"));
 
                         AppController.message(AddPlaceActivity.this, "تکمیل اطلاعات");
-                        startActivity(new Intent(AddPlaceActivity.this, BodyActivity.class));
+                        startActivity(new Intent(AddPlaceActivity.this, MainActivity.class));
                         finish();
 
                     } else if (resp.getString("status").equals("403")) {

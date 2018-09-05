@@ -24,7 +24,6 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,7 +78,7 @@ public class LoginActivity extends AppCompatActivity implements ImageLoadingList
         btnLoginLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this , BodyActivity.class));
+                startActivity(new Intent(LoginActivity.this , MainActivity.class));
             }
         });
 

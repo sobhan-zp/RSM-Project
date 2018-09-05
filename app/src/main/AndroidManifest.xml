@@ -3,7 +3,9 @@
     package="pro.rasht.museum.ar">
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -70,7 +72,7 @@
         </activity>
         <activity android:name=".Activity.EnterProfileActivity" />
         <activity android:name=".Activity.ArModulActivity" />
-        <activity android:name=".Activity.BodyActivity">
+        <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -78,7 +80,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.AddPlaceActivity" />
-        <activity android:name=".Activity.MapPlaceActivity"></activity>
+        <activity android:name=".Activity.MapPlaceActivity" />
+        <activity android:name=".Activity.NetworkErrorActivity"></activity>
     </application>
 
 </manifest>

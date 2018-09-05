@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -72,7 +71,7 @@ public class EnterProfileActivity extends AppCompatActivity {
         btnNextEnterProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(EnterProfileActivity.this, BodyActivity.class));
+                //startActivity(new Intent(EnterProfileActivity.this, MainActivity.class));
 
                 if (!isNetworkAvailable()) {
                     AppController.message(EnterProfileActivity.this, "لطفا اتصال به اینترنت خود را برسی کنید");
@@ -179,7 +178,7 @@ public class EnterProfileActivity extends AppCompatActivity {
                         //save.save(AppController.SAVE_USER_ID, resp.getString("id"));
 
                         AppController.message(EnterProfileActivity.this, "تکمیل اطلاعات");
-                        startActivity(new Intent(EnterProfileActivity.this, BodyActivity.class));
+                        startActivity(new Intent(EnterProfileActivity.this, MainActivity.class));
                         finish();
 
                     } else if (resp.getString("status").equals("403")) {

@@ -17,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import pro.rasht.museum.ar.Activity.AddPlaceActivity;
-import pro.rasht.museum.ar.Activity.BodyActivity;
+import pro.rasht.museum.ar.Activity.MainActivity;
 import pro.rasht.museum.ar.Activity.EnterProfileActivity;
 import pro.rasht.museum.ar.Classes.CircularImageView;
 import pro.rasht.museum.ar.Classes.SavePref;
@@ -96,7 +96,7 @@ public class FragmentProfile extends Fragment {
             public void onClick(View v) {
 
                 save.save(AppController.SAVE_LOGIN, "0");
-                startActivity(new Intent(context, BodyActivity.class));
+                startActivity(new Intent(context, MainActivity.class));
                 getActivity().finish();
             }
         });

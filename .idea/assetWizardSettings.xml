@@ -32,10 +32,9 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="backgroundColor" value="c6c5ca" />
-                                      <entry key="iconShape" value="CIRCLE" />
-                                      <entry key="imageAsset" value="C:\Users\zp\Desktop\logo.png" />
-                                      <entry key="outputName" value="ic_luncher" />
+                                      <entry key="iconShape" value="NONE" />
+                                      <entry key="imageAsset" value="C:\Users\zp\Desktop\could.png" />
+                                      <entry key="outputName" value="ic_could" />
                                     </map>
                                   </option>
                                 </PersistentState>
