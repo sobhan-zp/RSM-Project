@@ -25,7 +25,7 @@ public class AppController extends Application {
     public static final String TAG = AppController.class.getSimpleName();
 
 
-    public final static String URL = "http://archism.direct/rsm/rashtpro/index.php/api/";
+    public final static String URL = "http://archism.direct/rsm/index.php/api/";
 
     public final static String URL_TARGET = URL + "ar/";
     public final static String URL_TARGET_DETAIL = URL + "ar/detail/";
@@ -42,6 +42,8 @@ public class AppController extends Application {
     public final static String SAVE_USER_EMAIL = "SAVE_USER_EMAIL";
     public final static String SAVE_USER_MOBILE = "SAVE_USER_MOBILE";
     public final static String SAVE_USER_ACTIVE = "SAVE_USER_ACTIVE";
+
+    public final static String SAVE_COMPLETE_PROFILE = "SAVE_COMPLETE_PROFILE";
 
 
 

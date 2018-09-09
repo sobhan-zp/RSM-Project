@@ -7,17 +7,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.android.volley.Response;
@@ -32,6 +37,8 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.rasht.museum.ar.Classes.ImageUtil;
+import pro.rasht.museum.ar.Classes.RuntimePermissionHelper;
+import pro.rasht.museum.ar.Classes.SavePref;
 import pro.rasht.museum.ar.Fragment.Items_Viewpager_market;
 import pro.rasht.museum.ar.Fragment.NonSwipeableViewPager;
 import pro.rasht.museum.ar.Model.Target;
@@ -62,16 +69,32 @@ public class MainActivity extends AppCompatActivity {
     NonSwipeableViewPager pager;
 
     Context context;
+    SavePref save;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        save = new SavePref(this);
         ButterKnife.bind(this);
-
         NetworkError();
-
         loadTarget();
+
+
+        //tak,il etelaat
+        if (save.load(AppController.SAVE_COMPLETE_PROFILE,"0") == "0"){
+
+            imgProfileBody.setColorFilter(MainActivity.this.getResources().getColor(R.color.material_red_A700));
+
+
+        }else{
+
+            imgProfileBody.setColorFilter(MainActivity.this.getResources().getColor(R.color.black));
+
+        }
+
+
         pager = (NonSwipeableViewPager) findViewById(R.id.viewpager);
         Items_Viewpager_market adapter_articles = new Items_Viewpager_market(getSupportFragmentManager());
         pager.setAdapter(adapter_articles);
@@ -81,51 +104,14 @@ public class MainActivity extends AppCompatActivity {
 
         //defult property View
         tvProfileBody.setVisibility(View.VISIBLE);
-        setPermission_Camera();
 
-        //Bottom Navigation
+
+
+
+
 
     }
 
-    //for Permission
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 12234: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    //dastrasi dade shode
-
-                } else {
-                    new AlertDialog.Builder(this)
-                            .setMessage("برای اجرای برنامه باید حتما دسترسی رو به برنامه بدهید")
-                            .setCancelable(false)
-                            .setNegativeButton("دادن دسترسی", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    setPermission_Camera();
-
-                                }
-                            })
-                            .show();
-                }
-            }
-            return;
-        }
-    }
-
-    //checkPermission
-    public void setPermission_Camera() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.CAMERA)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 12234);
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 12234);
-            }
-        }
-    }
 
 
     public void onCLickHome(View v) {
@@ -164,20 +150,6 @@ public class MainActivity extends AppCompatActivity {
         pager.setCurrentItem(2);
     }
 
-   /* public void onCLickMap(View v) {
-        setVisibiltyBottomBar(tvMapBody);
-        Animation animation = new TranslateAnimation(0, 0, 15, 0);
-        Animation animation1 = new TranslateAnimation(0, 0, 70, 0);
-        animation.setDuration(300);
-        animation1.setDuration(200);
-        imgMapBody.startAnimation(animation);
-        tvMapBody.startAnimation(animation1);
-
-        pager.setCurrentItem(3);
-
-
-    }*/
-
     public void onCLickProfile(View v) {
         setVisibiltyBottomBar(tvProfileBody);
         Animation animation = new TranslateAnimation(0, 0, 15, 0);
@@ -189,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
         pager.setCurrentItem(4);
     }
+
 
 
 

@@ -122,8 +122,11 @@ public class EnterProfileActivity extends AppCompatActivity {
                     save.save(AppController.SAVE_USER_MOBILE, etPhoneProfile.getText().toString());
                     save.save(AppController.SAVE_USER_EMAIL, etEmailProfile.getText().toString());
 
+
+
                     dialog.setMessage("ورود...");
                     dialog.show();
+
                     signup(
                             etNameProfile.getText().toString(),
                             etfamilyProfile.getText().toString(),
@@ -155,16 +158,6 @@ public class EnterProfileActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
-
-
         CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST, AppController.URL_SIGNUP, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -175,6 +168,7 @@ public class EnterProfileActivity extends AppCompatActivity {
                     if (resp.getString("status").equals("200")) {
 
                         save.save(AppController.SAVE_LOGIN, "1");
+                        save.save(AppController.SAVE_COMPLETE_PROFILE, "1");
                         //save.save(AppController.SAVE_USER_ID, resp.getString("id"));
 
                         AppController.message(EnterProfileActivity.this, "تکمیل اطلاعات");

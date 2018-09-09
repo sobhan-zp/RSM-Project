@@ -38,6 +38,7 @@ import com.beyondar.android.view.OnClickBeyondarObjectListener;
 import com.beyondar.android.world.BeyondarObject;
 import com.beyondar.android.world.GeoObject;
 import com.beyondar.android.world.World;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -47,6 +48,7 @@ import com.google.maps.android.SphericalUtil;
 import pro.rasht.museum.ar.ar.ArBeyondarGLSurfaceView;
 import pro.rasht.museum.ar.ar.ArFragmentSupport;
 import pro.rasht.museum.ar.ar.OnTouchBeyondarViewListenerMod;
+import pro.rasht.museum.ar.network.Model.BaseGeo;
 import pro.rasht.museum.ar.network.PlaceResponse;
 import pro.rasht.museum.ar.network.PoiResponse;
 import pro.rasht.museum.ar.network.RetrofitInterface;
@@ -99,6 +101,7 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
     private LayoutInflater layoutInflater;
     private ArFragmentSupport arFragmentSupport;
     private World world;
+    private List<BaseGeo> baseGeoList = new ArrayList<>();
 
     @BindView(R.id.poi_place_detail)
     CardView poi_cardview;
@@ -229,12 +232,15 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
 
 
                 Result result = new Result();
-
                 Geometry geometry = new Geometry(
-                        new pro.rasht.museum.ar.network.poi.Location(37.284023f, 49.574364f),
+                        new pro.rasht.museum.ar.network.poi.Location(37.283696f,49.571167f),
                         new Viewport(
-                                new Northeast(37.2870085802915f, 49.58108808029149f),
-                                new Southwest(37.2843106197085f, 49.5783901197085f)
+                                new Northeast(
+                                        (float) (49.573973f + (radius/Math.abs(Math.cos(Math.toRadians(37.283696f)))*111)),
+                                        (37.283696f + (radius/111))),
+                                new Southwest(
+                                        (float) (49.573973f - (radius/Math.abs(Math.cos(Math.toRadians(37.283696f)))*111)),
+                                        (37.283696f - (radius/111)))
                         )
                 );
 
@@ -243,7 +249,7 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
                 htmlList.add("<a href=\"https://maps.google.com/maps/contrib/109471291971103535103/photos\">Naser Tavala</a>");
                 photoList.add(new Photo(1152,
                         htmlList,
-                        "CmRaAAAAsJM2ylVd7CqEPm6zDBjJu7YSBiwMOgaBaZBkqmg-Z8UVvXOfOjuQKBwl1zMFYkhFQY4maxuHbRB5k2sx8IVnZaw7UKEZSgj0SzSal2BpXEEMuJ-oOx-ssCsIQbZ4km6_EhAF2sM0Rnh8uYVl_xP2YLJJGhSZbTujy8qMaWwvGTrI6RP71GX_Yg",
+                        "https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/flip.jpg",
                         2048));
 
                 List<String> typeList = new ArrayList<>();
@@ -258,14 +264,100 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
                 result.setName("اداره کل هواشناسی استان گیلان");
                 result.setOpeningHours(new OpeningHours(true));
                 result.setPhotos(photoList);
-                result.setPlaceId("ChIJS54XFpzYH0ARMakgPC8CIfw");
+
                 result.setRating(3.9f);
-                result.setReference("CmRSAAAAtnAC2kB9ZreSEIhvhDKQbIDZW_1keGl6M8BnVtQXj4q4RPWJG6pwZHhm-ztZLI61sK_JEpR7FEHro9ZdC2IZ6FfsPb3PDrF6pZKMERlgJJKxskY-V_saFU2Xc9yR5-7BEhCL-VMGfP7o3m5CSTuS62yeGhQ0sRaX-tT-35cF1fqpXSq6LTMeCA");
+                result.setReference("https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/flip.jpg");
                 result.setScope("GOOGLE");
                 result.setTypes(typeList);
                 result.setVicinity("Rasht, رشت .بلوار معلم, Moalem Boulevard");
 
+
+                result.setPlaceId("0");
+                result.setGeometry(geometry);
                 poiResult.add(result);
+
+
+
+
+
+
+
+
+
+
+                Result result1 = new Result();
+
+                Geometry geometry1 = new Geometry(
+                        new pro.rasht.museum.ar.network.poi.Location(37.282735f, 49.573973f),
+                        new Viewport(
+                                new Northeast(
+                                        (float) (49.573973f + (radius/Math.abs(Math.cos(Math.toRadians(37.282735f)))*111)),
+                                        (37.282735f + (radius/111))),
+                                new Southwest(
+                                        (float) (49.573973f - (radius/Math.abs(Math.cos(Math.toRadians(37.282735f)))*111)),
+                                        (37.282735f - (radius/111)))
+                        )
+                );
+
+                htmlList.add("<a href=\"https://maps.google.com/maps/contrib/109471291971103535103/photos\">Naser Tavala</a>");
+                photoList.add(new Photo(1152,
+                        htmlList,
+                        "https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/flip.jpg",
+                        2048));
+
+                typeList.add("local_government_office");
+                typeList.add("point_of_interest");
+                typeList.add("establishment");
+
+
+                result1.setGeometry(geometry);
+                result1.setIcon("https://maps.gstatic.com/mapfiles/place_api/icons/civic_building-71.png");
+                result1.setId("c49dcd1fc8bad9bd06ce617826d2279aac62165e");
+                result1.setName("اداره کل هواشناسی استان گیلان");
+                result1.setOpeningHours(new OpeningHours(true));
+                result1.setPhotos(photoList);
+
+                result1.setRating(3.9f);
+                result1.setReference("https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/flip.jpg");
+                result1.setScope("GOOGLE");
+                result1.setTypes(typeList);
+                result1.setVicinity("Rasht, رشت .بلوار معلم, Moalem Boulevard");
+
+
+                result1.setPlaceId("1");
+                result1.setGeometry(geometry1);
+                poiResult.add(result1);
+
+
+
+
+
+
+
+
+
+
+
+
+                BaseGeo baseGeo = new BaseGeo();
+                baseGeo.setPlaceid("ChIJS54XFpzYH0ARMakgPC8CIfw");
+                baseGeo.setName("نام");
+                baseGeo.setDetail("جزِیات");
+                baseGeo.setAddress("آدرس");
+                baseGeo.setImg("https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/flip.jpg");
+
+                baseGeoList.add(baseGeo);
+
+                BaseGeo baseGeo1 = new BaseGeo();
+                baseGeo1.setPlaceid("ChIJS54XFpzYH0ARMakgPC8CIfc");
+                baseGeo1.setName("نام 2");
+                baseGeo1.setDetail("جزِیات 2");
+                baseGeo1.setAddress("آدرس 2");
+
+                baseGeo1.setImg("https://titan.uio.no/sites/default/files/thumbnails/image/as17-148-22727.jpg");
+
+                baseGeoList.add(baseGeo1);
+
 
                 Log.e("MAZIAR----------------" , "------------------------------------------------");
 
@@ -297,7 +389,7 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
         RetrofitInterface apiService =
                 retrofit.create(RetrofitInterface.class);
 
-        final Call<PlaceResponse> call = apiService.getPlaceDetail(placeid,
+        final Call<PlaceResponse> call = apiService.getPlaceDetail(baseGeoList.get(Integer.parseInt(placeid)).getPlaceid(),
                 getResources().getString(R.string.google_maps_key));
 
         call.enqueue(new Callback<PlaceResponse>() {
@@ -310,25 +402,15 @@ public class PoiBrowserActivity extends FragmentActivity implements GoogleApiCli
 
                 final pro.rasht.museum.ar.network.place.Result result=response.body().getResult();
 
-                poi_place_name.setText(result.getName());
-                poi_place_addr.setText(result.getFormattedAddress());
+                poi_place_name.setText(baseGeoList.get(Integer.parseInt(placeid)).getName());
+                poi_place_addr.setText(baseGeoList.get(Integer.parseInt(placeid)).getAddress());
 
-                try {
-                    HttpUrl url = new HttpUrl.Builder()
-                            .scheme("https")
-                            .host("maps.googleapis.com")
-                            .addPathSegments("maps/api/place/photo")
-                            .addQueryParameter("maxwidth", "400")
-                            .addQueryParameter("photoreference", result.getPhotos().get(0).getPhotoReference())
-                            .addQueryParameter("key", getResources().getString(R.string.google_maps_key))
-                            .build();
+                Log.e("TAG-----------",baseGeoList.get(Integer.parseInt(placeid)).getImg());
 
-                    new PoiPhotoAsync().execute(url.toString());
+                poi_place_image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                Glide.with(PoiBrowserActivity.this).load(baseGeoList.get(Integer.parseInt(placeid)).getImg()).into(poi_place_image);
 
-                }catch (Exception e){
-                    Log.d(TAG, "onResponse: "+e.getMessage());
-                    Toast.makeText(PoiBrowserActivity.this,getString(R.string.no_image_poiActivity), Toast.LENGTH_SHORT).show();
-                }
+
 
                 poi_place_maps_btn.setOnClickListener(new View.OnClickListener() {
                     @Override

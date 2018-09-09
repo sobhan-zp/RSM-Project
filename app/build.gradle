@@ -70,6 +70,8 @@ dependencies {
     implementation 'uk.co.chrisjenx:calligraphy:2.2.0'
     //circleimageview
     implementation 'de.hdodenhof:circleimageview:1.2.1'
+    //RunTime Permission
+    implementation 'com.nabinbhandari.android:permissions:3.7'
     //kenburnsview (Loging bg)
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.2'
@@ -80,7 +82,8 @@ dependencies {
     implementation 'com.github.florent37:diagonallayout:1.0.2'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
 
-
+    //glide
+    implementation 'com.github.bumptech.glide:glide:3.6.0'
 
 
 

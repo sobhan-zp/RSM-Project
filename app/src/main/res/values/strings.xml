@@ -143,8 +143,10 @@
     <string name="permission_loc_message">Location permission is required to find nearby Restraunts</string>
     <string name="location_permission_toast">Please provide location permissions from the settings</string>
     <string name="tv_network">اتصال به اینترنت برقرار نمی باشد</string>
-    <string name="tv_network_try_wifi">اینرنت Wi-fi</string>
-    <string name="tv_network_try_data">اینرنت موبایل</string>
+    <string name="tv_network_desc">برای استفاده از اپلیکیشن نیاز به روشن کردن اینترنت و gps است.</string>
+    <string name="tv_network_try_wifi">Wi-fi</string>
+    <string name="tv_network_try_data">Data-Mobile</string>
+    <string name="tv_gps">GPS</string>
 
 
 </resources>

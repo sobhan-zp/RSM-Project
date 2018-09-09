@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pro.rasht.museum.ar.Classes.RuntimePermissionHelper;
 import pro.rasht.museum.ar.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -57,6 +59,8 @@ public class LoginActivity extends AppCompatActivity implements ImageLoadingList
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        runTimePermission();
+
         // Start code for Intro App
         prefs = getSharedPreferences("pro.rasht.ar", MODE_PRIVATE);
         if (prefs.getBoolean("firstrun", true)) {
@@ -84,6 +88,26 @@ public class LoginActivity extends AppCompatActivity implements ImageLoadingList
 
     }
 
+
+
+    //permission method
+    public void runTimePermission(){
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            RuntimePermissionHelper runtimePermissionHelper = RuntimePermissionHelper.getInstance(this);
+            if (runtimePermissionHelper.isAllPermissionAvailable()) {
+                // All permissions available. Go with the flow
+            } else {
+                // Few permissions not granted. Ask for ungranted permissions
+                runtimePermissionHelper.setActivity(this);
+                runtimePermissionHelper.requestPermissionsIfDenied();
+            }
+        } else {
+            // SDK below API 23. Do nothing just go with the flow.
+        }
+
+
+    }
 
     // Start code for Background Page
     private void loadImage() {

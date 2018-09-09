@@ -24,6 +24,8 @@ public class NetworkErrorActivity extends AppCompatActivity {
     @BindView(R.id.tv_try_data_network)
     TextView tvTryDataNetwork;
 
+    CountDownTimer mCountDown;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,9 +37,9 @@ public class NetworkErrorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                Intent i = new Intent(getApplicationContext() , MainActivity.class);
-                startActivity(i);
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                //Intent i = new Intent(getApplicationContext() , MainActivity.class);
+                //startActivity(i);
 
             }
         });
@@ -53,34 +55,30 @@ public class NetworkErrorActivity extends AppCompatActivity {
         });
 
 
-      /*  final boolean[] zp = new boolean[0];
+        /*final boolean[] isRunning = {false};
 
-        CountDownTimer countDownTimer = new CountDownTimer(60000, 1000) {
-
+        mCountDown = new CountDownTimer((300 * 1000), 1000) {
 
             public void onTick(long millisUntilFinished) {
+                if (isNetworkAvailable()){
 
-                    if (isNetworkAvailable()){
+                    isRunning[0] = true;
+                    Intent i = new Intent(NetworkErrorActivity.this , MainActivity.class);
+                    startActivity(i);
+                    //finish();
+                }
 
-                        zp[0] = true;
-                        Intent i = new Intent(NetworkErrorActivity.this , MainActivity.class);
-                        startActivity(i);
-                        finish();
-                    }
-
-
-
+                //rest of code
             }
 
             public void onFinish() {
-                *//*if (isNetworkAvailable()) {
-                    Intent i = new Intent(NetworkErrorActivity.this , MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }*//*
+                isRunning[0] = false;
+                //rest of code
             }
-
         }.start();*/
+
+
+
 
     }
 

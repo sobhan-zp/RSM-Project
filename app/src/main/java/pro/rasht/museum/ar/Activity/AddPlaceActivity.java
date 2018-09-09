@@ -14,7 +14,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -48,7 +47,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.rasht.museum.ar.Classes.CircularImageView;
-import pro.rasht.museum.ar.Classes.RuntimePermissionHelper;
 import pro.rasht.museum.ar.Classes.SavePref;
 import pro.rasht.museum.ar.Classes.Upload;
 import pro.rasht.museum.ar.R;
@@ -159,7 +157,6 @@ public class AddPlaceActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        RunTimePermission();
         addImageVideoAr();
         addVideoAr();
         loadimgGg();
@@ -292,22 +289,7 @@ public class AddPlaceActivity extends AppCompatActivity {
     }
 
 
-    private void RunTimePermission() {
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            RuntimePermissionHelper runtimePermissionHelper = RuntimePermissionHelper.getInstance(this);
-            if (runtimePermissionHelper.isAllPermissionAvailable()) {
-                // All permissions available. Go with the flow
-            } else {
-                // Few permissions not granted. Ask for ungranted permissions
-                runtimePermissionHelper.setActivity(this);
-                runtimePermissionHelper.requestPermissionsIfDenied();
-            }
-        } else {
-            // SDK below API 23. Do nothing just go with the flow.
-        }
-
-    }
 
 
     private void addImageVideoAr() {

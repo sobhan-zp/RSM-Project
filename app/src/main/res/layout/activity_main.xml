@@ -84,51 +84,6 @@
                 </RelativeLayout>
 
 
-                <!-- map
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="0.25"
-                    android:gravity="center">
-
-
-                    <LinearLayout
-                        android:id="@+id/ll_map_body"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:onClick="onCLickMap"
-                        android:orientation="vertical"
-                        android:paddingLeft="@dimen/padding_medium"
-                        android:paddingRight="@dimen/padding_medium"
-                        tools:ignore="UselessParent">
-
-                        <ImageView
-                            android:id="@+id/img_map_body"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:tint="@color/black"
-                            android:src="@mipmap/ic_map"
-                            tools:ignore="ContentDescription" />
-
-                        <TextView
-                            android:id="@+id/tv_map_body"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:maxLines="1"
-                            android:paddingTop="@dimen/padding_bit"
-                            android:text="@string/map"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/font_xxsmall"
-                            android:visibility="gone"
-                            tools:ignore="ObsoleteLayoutParam" />
-                    </LinearLayout>
-
-                </RelativeLayout>
-                -->
 
                 <!-- music-->
                 <RelativeLayout
