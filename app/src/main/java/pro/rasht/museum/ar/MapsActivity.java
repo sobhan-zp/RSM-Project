@@ -1,9 +1,10 @@
 package pro.rasht.museum.ar;
 
 import android.Manifest;
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -16,7 +17,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,7 +33,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,8 +77,8 @@ import butterknife.ButterKnife;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import pro.rasht.museum.ar.Activity.MainActivity;
 import pro.rasht.museum.ar.ar.ArBeyondarGLSurfaceView;
-import pro.rasht.museum.ar.ar.ArFragmentSupport;
 import pro.rasht.museum.ar.ar.OnTouchBeyondarViewListenerMod;
 import pro.rasht.museum.ar.network.DirectionsJSONParser;
 import pro.rasht.museum.ar.network.PlaceResponse;
@@ -91,7 +90,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource;
 
@@ -146,7 +144,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     static final LatLng lakani = new LatLng(37.275524, 49.580935);
 
 
-
     //private TextView dialog_loading_text;
     private Location location;
     private GoogleApiClient mGoogleApiClient;
@@ -171,11 +168,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ProgressBar dialog_browser_progress;
     @BindView(R.id.dialog_place_maps_direction)
     Button dialog_place_maps_btn;
+    @BindView(R.id.tv_desc_point_map)
+    TextView tvDescPointMap;
+    @BindView(R.id.tv_other_point_map)
+    TextView tvOtherPointMap;
     /*@BindView(R.id.seekBar)
     SeekBar seekbar;
     @BindView(R.id.seekbar_cardview)
     CardView seekbar_cardview;*/
-
 
 
     @Override
@@ -189,12 +189,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dialog_browser_progress.setVisibility(View.GONE);
         dialog_cardview.setVisibility(View.GONE);
         arNav();
-
+        otherButtonText();
 
 
     }
-
-
 
 
     @Override
@@ -211,7 +209,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnPoiClickListener(new GoogleMap.OnPoiClickListener() {
             @Override
             public void onPoiClick(PointOfInterest pointOfInterest) {
-                Toast.makeText(context, ""+pointOfInterest.placeId, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "" + pointOfInterest.placeId, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -219,7 +217,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Poi_details_call(poiResult.get(0).getPlaceId());
 
-        Log.e("ID----------" , poiResult.get(0).getPlaceId());
+        Log.e("ID----------", poiResult.get(0).getPlaceId());
 
         return false;
     }
@@ -565,8 +563,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
-    void Poi_list_call(int radius){
+    void Poi_list_call(int radius) {
         dialog_browser_progress.setVisibility(View.VISIBLE);
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -581,8 +578,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         RetrofitInterface apiService =
                 retrofit.create(RetrofitInterface.class);
 
-        final Call<PoiResponse> call = apiService.listPOI(String.valueOf(location.getLatitude())+","+
-                        String.valueOf(location.getLongitude()),radius,
+        final Call<PoiResponse> call = apiService.listPOI(String.valueOf(location.getLatitude()) + "," +
+                        String.valueOf(location.getLongitude()), radius,
                 getResources().getString(R.string.google_maps_key));
 
         call.enqueue(new Callback<PoiResponse>() {
@@ -592,9 +589,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 dialog_browser_progress.setVisibility(View.GONE);
                 //seekbar_cardview.setVisibility(View.VISIBLE);
 
-                poiResult=response.body().getResults();
-
-
+                poiResult = response.body().getResults();
 
 
                 Configure_AR(poiResult);
@@ -608,7 +603,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    void Poi_details_call(String placeid){
+    void Poi_details_call(String placeid) {
 
         dialog_browser_progress.setVisibility(View.VISIBLE);
 
@@ -636,7 +631,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 dialog_cardview.setVisibility(View.VISIBLE);
                 dialog_browser_progress.setVisibility(View.GONE);
 
-                final pro.rasht.museum.ar.network.place.Result result=response.body().getResult();
+                final pro.rasht.museum.ar.network.place.Result result = response.body().getResult();
 
                 dialog_place_name.setText(result.getName());
                 dialog_place_addr.setText(result.getFormattedAddress());
@@ -653,15 +648,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     new PoiPhotoAsync().execute(url.toString());
 
-                }catch (Exception e){
-                    Log.d(TAG, "onResponse: "+e.getMessage());
-                    Toast.makeText(MapsActivity.this,getString(R.string.no_image_poiActivity), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.d(TAG, "onResponse: " + e.getMessage());
+                    Toast.makeText(MapsActivity.this, getString(R.string.no_image_poiActivity), Toast.LENGTH_SHORT).show();
                 }
 
                 dialog_place_maps_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
 
 
                         String url = getDirectionsUrl(
@@ -697,22 +691,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 dialog_place_ar_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent=new Intent(MapsActivity.this,ArCamActivity.class);
+                        Intent intent = new Intent(MapsActivity.this, ArCamActivity.class);
 
                         try {
                             intent.putExtra("SRC", "Current Location");
-                            intent.putExtra("DEST",  result.getGeometry().getLocation().getLat()+","+
+                            intent.putExtra("DEST", result.getGeometry().getLocation().getLat() + "," +
                                     result.getGeometry().getLocation().getLng());
-                            intent.putExtra("SRCLATLNG",  location.getLatitude()+","+location.getLongitude());
-                            intent.putExtra("DESTLATLNG", result.getGeometry().getLocation().getLat()+","+
+                            intent.putExtra("SRCLATLNG", location.getLatitude() + "," + location.getLongitude());
+                            intent.putExtra("DESTLATLNG", result.getGeometry().getLocation().getLat() + "," +
                                     result.getGeometry().getLocation().getLng());
                             startActivity(intent);
                             finish();
-                        }catch (NullPointerException npe){
+                        } catch (NullPointerException npe) {
                             Log.d(TAG, "onClick: The IntentExtras are Empty");
                         }
                     }
                 });
+
+
+
+
 
             }
 
@@ -725,9 +723,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-
-    public class PoiPhotoAsync extends AsyncTask<String,Void,Bitmap> {
+    public class PoiPhotoAsync extends AsyncTask<String, Void, Bitmap> {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
@@ -750,20 +746,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void Configure_AR(List<Result> pois){
+    private void Configure_AR(List<Result> pois) {
 
-        layoutInflater=getLayoutInflater();
+        layoutInflater = getLayoutInflater();
 
-        world=new World(getApplicationContext());
-        world.setGeoPosition(location.getLatitude(),location.getLongitude());
+        world = new World(getApplicationContext());
+        world.setGeoPosition(location.getLatitude(), location.getLongitude());
         world.setDefaultImage(R.drawable.ar_sphere_default);
 
 //        arFragmentSupport.getGLSurfaceView().setPullCloserDistance(25);
 
-        GeoObject geoObjects[]=new GeoObject[pois.size()];
+        GeoObject geoObjects[] = new GeoObject[pois.size()];
 
-        for(int i=0;i<pois.size();i++) {
-            GeoObject poiGeoObj=new GeoObject(1000*(i+1));
+        for (int i = 0; i < pois.size(); i++) {
+            GeoObject poiGeoObj = new GeoObject(1000 * (i + 1));
             //ArObject2 poiGeoObj=new ArObject2(1000*(i+1));
 
 //            poiGeoObj.setImageUri(getImageUri(this,textAsBitmap(pois.get(i).getName(),10.0f, Color.WHITE)));
@@ -775,44 +771,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Bitmap bitmap=textAsBitmap(pois.get(i).getName(),30.0f,Color.WHITE);
 
             Bitmap snapshot = null;
-            View view= getLayoutInflater().inflate(R.layout.poi_container,null);
-            TextView name= (TextView)view.findViewById(R.id.poi_container_name);
-            TextView dist= (TextView)view.findViewById(R.id.poi_container_dist);
-            ImageView icon=(ImageView)view.findViewById(R.id.poi_container_icon);
+            View view = getLayoutInflater().inflate(R.layout.poi_container, null);
+            TextView name = (TextView) view.findViewById(R.id.poi_container_name);
+            TextView dist = (TextView) view.findViewById(R.id.poi_container_dist);
+            ImageView icon = (ImageView) view.findViewById(R.id.poi_container_icon);
 
             name.setText(pois.get(i).getName());
-            String distance=String.valueOf((SphericalUtil.computeDistanceBetween(
-                    new LatLng(location.getLatitude(),location.getLongitude()),
+            String distance = String.valueOf((SphericalUtil.computeDistanceBetween(
+                    new LatLng(location.getLatitude(), location.getLongitude()),
                     new LatLng(pois.get(i).getGeometry().getLocation().getLat(),
-                            pois.get(i).getGeometry().getLocation().getLng())))/1000);
-            String d=distance+" KM";
+                            pois.get(i).getGeometry().getLocation().getLng()))) / 1000);
+            String d = distance + " KM";
             dist.setText(d);
 
-            String type=pois.get(i).getTypes().get(0);
-            Log.d(TAG, "Configure_AR: TYPE:"+type + "LODGING:"+R.string.logding);
-            if(type.equals(getResources().getString(R.string.restaurant))){
+            String type = pois.get(i).getTypes().get(0);
+            Log.d(TAG, "Configure_AR: TYPE:" + type + "LODGING:" + R.string.logding);
+            if (type.equals(getResources().getString(R.string.restaurant))) {
                 icon.setImageResource(R.drawable.food_fork_drink);
-            }else if(type.equals(getResources().getString(R.string.logding))){
+            } else if (type.equals(getResources().getString(R.string.logding))) {
                 icon.setImageResource(R.drawable.hotel);
-            }else if(type.equals(getResources().getString(R.string.atm))){
+            } else if (type.equals(getResources().getString(R.string.atm))) {
                 icon.setImageResource(R.drawable.cash_usd);
-            }else if(type.equals(getResources().getString(R.string.hosp))){
+            } else if (type.equals(getResources().getString(R.string.hosp))) {
                 icon.setImageResource(R.drawable.hospital);
-            }else if(type.equals(getResources().getString(R.string.movie))){
+            } else if (type.equals(getResources().getString(R.string.movie))) {
                 icon.setImageResource(R.drawable.filmstrip);
-            }else if(type.equals(getResources().getString(R.string.cafe))){
+            } else if (type.equals(getResources().getString(R.string.cafe))) {
                 icon.setImageResource(R.drawable.coffee);
-            }else if(type.equals(getResources().getString(R.string.bakery))){
+            } else if (type.equals(getResources().getString(R.string.bakery))) {
                 icon.setImageResource(R.drawable.food);
-            }else if(type.equals(getResources().getString(R.string.mall))){
+            } else if (type.equals(getResources().getString(R.string.mall))) {
                 icon.setImageResource(R.drawable.shopping);
-            }else if(type.equals(getResources().getString(R.string.pharmacy))){
+            } else if (type.equals(getResources().getString(R.string.pharmacy))) {
                 icon.setImageResource(R.drawable.pharmacy);
-            }else if(type.equals(getResources().getString(R.string.park))){
+            } else if (type.equals(getResources().getString(R.string.park))) {
                 icon.setImageResource(R.drawable.pine_tree);
-            }else if(type.equals(getResources().getString(R.string.bus))){
+            } else if (type.equals(getResources().getString(R.string.bus))) {
                 icon.setImageResource(R.drawable.bus);
-            }else {
+            } else {
                 icon.setImageResource(R.drawable.map_icon);
             }
 
@@ -842,7 +838,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
 
-            String uri=saveToInternalStorage(snapshot,pois.get(i).getId()+".png");
+            String uri = saveToInternalStorage(snapshot, pois.get(i).getId() + ".png");
 
             //icon.setImageURI(Uri.parse(uri));
             poiGeoObj.setImageUri(uri);
@@ -857,14 +853,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private String saveToInternalStorage(Bitmap bitmapImage,String name){
+    private String saveToInternalStorage(Bitmap bitmapImage, String name) {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         // Create imageDir
-        File mypath=new File(directory,name);
+        File mypath = new File(directory, name);
 
-        Log.d(TAG, "saveToInternalStorage: PATH:"+mypath.toString());
+        Log.d(TAG, "saveToInternalStorage: PATH:" + mypath.toString());
 
         FileOutputStream fos = null;
         try {
@@ -882,8 +878,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return mypath.toString();
     }
-
-
 
 
     @Override
@@ -924,7 +918,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         while (iterator.hasNext()) {
             BeyondarObject geoObject = iterator.next();
             textEvent = textEvent + " " + geoObject.getName();
-            Log.d(TAG, "onTouchBeyondarView: ATTENTION !!! "+textEvent);
+            Log.d(TAG, "onTouchBeyondarView: ATTENTION !!! " + textEvent);
 
             // ...
             // Do something
@@ -935,12 +929,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // End Ar Navigation After Click
 
-
-
-
-
-
-    private class DownloadTask extends AsyncTask<String,Void,String> {
+    private class DownloadTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... url) {
@@ -995,15 +984,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.clear();
             addMarkers();
 
-            for (int i = 0; i < result.size(); i++)
-            {
+            for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList<>();
                 lineOptions = new PolylineOptions();
 
                 List<HashMap> path = result.get(i);
 
-                for (int j = 0; j < path.size(); j++)
-                {
+                for (int j = 0; j < path.size(); j++) {
                     HashMap point = path.get(j);
 
                     double lat = Double.parseDouble(String.valueOf(point.get("lat")));
@@ -1085,6 +1072,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return data;
     }
 
+
+
+    //method main Text After Click On other Button
+    private void otherButtonText(){
+        tvOtherPointMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
+                //alertDialog.setTitle("Alert Dialog Title");
+                alertDialog.setMessage(getString(R.string.lorm_ipisium));
+                // Alert dialog button
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "باشه",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Alert dialog action goes here
+                                // onClick button code here
+                                dialog.dismiss();// use dismiss to cancel alert dialog
+                            }
+                        });
+                alertDialog.show();
+
+            }
+        });
+    }
 
 
 }

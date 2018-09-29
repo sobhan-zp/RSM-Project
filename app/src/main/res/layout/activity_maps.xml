@@ -23,7 +23,6 @@
         app:layout_constraintTop_toTopOf="@+id/map" />
 
 
-
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -33,6 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <android.support.v7.widget.CardView
         android:id="@+id/dialog_place_detail"
@@ -50,18 +50,65 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="7dp"
+            android:layout_margin="2dp"
+            android:layout_gravity="center"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
 
+
+
+
+
+                <!--address-->
+
+                <TextView
+                    android:id="@+id/dialog_place_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="3"
+                    android:paddingTop="10dp"
+                    android:text="@string/tv_address_poi"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+
+                <!--image & X-->
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <!--image-->
+                    <ImageView
+                        android:id="@+id/dialog_place_image"
+                        android:layout_width="200dp"
+                        android:layout_height="170dp"
+                        android:layout_gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="7dp"
+                        android:background="@drawable/amozesh1"
+                        android:scaleType="centerCrop" />
+
+                    <!--X-->
+                    <ImageButton
+                        android:id="@+id/dialog_place_close_btn"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_gravity="right"
+                        android:background="@drawable/ic_clear" />
+
+
+                </RelativeLayout>
+
+
+                <!--title-->
                 <TextView
                     android:id="@+id/dialog_place_name"
                     android:layout_width="match_parent"
@@ -74,100 +121,106 @@
                     android:textSize="18dp"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:id="@+id/dialog_place_close_btn"
-                    android:layout_width="70dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_clear" />
-            </LinearLayout>
 
-            <TextView
-                android:id="@+id/dialog_place_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:maxLines="3"
-                android:paddingTop="10dp"
-                android:text="@string/tv_address_poi"
-                android:textSize="20sp" />
+                <!--text body-->
+                <TextView
+                    android:id="@+id/tv_desc_point_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                    android:maxLength="100"
+                    android:text="@string/lorm_ipisium"
+                    android:textDirection="rtl" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
 
+                <!--other text-->
+                <TextView
+                    android:id="@+id/tv_other_point_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="بیشتر..."
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+
+
+                <!--button & option-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_marginTop="5dp"
                     android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/dialog_place_image"
-                        android:layout_width="200dp"
-                        android:layout_height="170dp"
-                        android:layout_margin="7dp"
-                        android:background="@drawable/amozesh1"
-                        android:scaleType="centerCrop" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/dialog_place_ar_direction"
-                        android:layout_width="120dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="5dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
                         android:background="@drawable/btn1_bg_dialogmap"
                         android:gravity="center"
-                        android:text="مسیریابی تصویری" />
-
+                        android:textColor="@color/white"
+                        android:text="مسیریابی تصویری"
+                        android:textSize="12dp" />
 
                     <Button
                         android:id="@+id/dialog_place_maps_direction"
-                        android:layout_width="120dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="5dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
                         android:background="@drawable/btn2_bg_dialogmap"
                         android:gravity="center"
-                        android:text="مسیریابی نقشه" />
+                        android:textColor="@color/white"
+                        android:text="مسیریابی نقشه"
+                        android:textSize="12dp" />
 
                     <Button
                         android:id="@+id/dialog_btn_holokit"
-                        android:layout_width="120dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="5dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
                         android:background="@drawable/btn3_bg_dialogmap"
                         android:gravity="center"
-                        android:text="هولوکیت" />
+                        android:textColor="@color/white"
+                        android:text="هولوکیت"
+                        android:textSize="12dp" />
 
                     <Button
                         android:id="@+id/dialog_btn_vr"
-                        android:layout_width="120dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="5dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
                         android:background="@drawable/btn4_bg_dialogmap"
                         android:gravity="center"
-                        android:text="واقعیت مجازی" />
+                        android:textColor="@color/white"
+                        android:text="واقعیت مجازی"
+                        android:textSize="12dp" />
 
 
                 </LinearLayout>
 
             </LinearLayout>
-        </LinearLayout>
+
+
+
 
 
     </android.support.v7.widget.CardView>

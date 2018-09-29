@@ -15,9 +15,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingBottom="30dp">
 
-                <LinearLayout
+            <LinearLayout
                 android:id="@+id/ll_img_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,45 +40,40 @@
                 </FrameLayout>
 
 
-
-
             </LinearLayout>
 
 
-                <!-- button profile -->
+            <!-- button profile -->
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+
+                <Button
+                    android:id="@+id/btn_insert_profile"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center"
-                    android:gravity="center">
+                    android:layout_margin="20dp"
+                    android:background="@drawable/btn_round"
+                    android:padding="10dp"
+                    android:text="تکمیل اطلاعات" />
 
 
-                    <Button
-                        android:id="@+id/btn_insert_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:background="@drawable/btn_round"
-                        android:layout_margin="20dp"
-                        android:text="تکمیل اطلاعات"/>
+                <Button
+                    android:id="@+id/btn_insert_location_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/btn_round"
+                    android:padding="10dp"
+                    android:text="ثبت مکان" />
 
-
-                    <Button
-                        android:id="@+id/btn_insert_location_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:background="@drawable/btn_round"
-                        android:layout_margin="20dp"
-                        android:text="ثبت مکان"/>
-
-                </LinearLayout>
-
-
+            </LinearLayout>
 
 
             <!-- Card View 1 -->
@@ -111,7 +107,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="نام: "
+                            android:text="نام:  "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -138,7 +134,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="نام خانوادگی: "
+                            android:text="نام خانوادگی:  "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -166,7 +162,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="استان: "
+                            android:text="استان:  "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -194,7 +190,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="شهر: "
+                            android:text="شهر:  "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -213,17 +209,17 @@
                 android:id="@+id/cv_info2_profile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="50dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="50dp">
+                android:layout_marginTop="30dp">
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
 
                     <!-- F name -->
@@ -239,7 +235,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="شماره همراه: "
+                            android:text="شماره همراه:  "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -265,7 +261,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="ایمیل: "
+                            android:text="ایمیل:  "
                             android:textColor="@color/material_grey_600"
                             android:textSize="14sp" />
 
@@ -283,8 +279,8 @@
                         android:id="@+id/li_exit_profil"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="right"
                         android:layout_marginTop="10dp"
+                        android:gravity="right"
                         android:orientation="horizontal">
 
 
@@ -293,8 +289,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:padding="10dp"
                             android:gravity="right"
+                            android:padding="10dp"
                             android:text="خروج از حساب کاربری"
                             android:textSize="14sp" />
 
@@ -305,15 +301,7 @@
                 </LinearLayout>
 
 
-
-
-
-
             </android.support.v7.widget.CardView>
-
-
-
-
 
 
         </LinearLayout>

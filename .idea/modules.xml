@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EasyAR/EasyAR.iml" filepath="$PROJECT_DIR$/EasyAR/EasyAR.iml" />
       <module fileurl="file://$PROJECT_DIR$/RSM-Project.iml" filepath="$PROJECT_DIR$/RSM-Project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RSM-Project-master.iml" filepath="$PROJECT_DIR$/RSM-Project-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

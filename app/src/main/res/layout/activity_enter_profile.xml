@@ -205,22 +205,24 @@
                         android:id="@+id/ll_mobile_enter_profile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
 
                         <EditText
                             android:id="@+id/et_phone_profile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:hint="شماره همراه"
-                            android:padding="10dp"
-                            android:maxLength="12"
-                            android:inputType="phone"
                             android:layout_gravity="right"
+                            android:background="@android:color/transparent"
                             android:gravity="right"
+                            android:hint="شماره همراه"
+                            android:inputType="phone"
+                            android:maxLength="12"
+                            android:padding="10dp"
                             android:textColor="@color/material_grey_600"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            android:visibility="gone" />
 
 
                     </LinearLayout>
@@ -228,7 +230,8 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/material_grey_200" />
+                        android:background="@color/material_grey_200"
+                        android:visibility="gone" />
 
                     <!-- L name -->
                     <LinearLayout

@@ -1,28 +1,18 @@
 package pro.rasht.museum.ar.Activity;
 
 
-import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.android.volley.Response;
@@ -41,7 +31,10 @@ import pro.rasht.museum.ar.Classes.RuntimePermissionHelper;
 import pro.rasht.museum.ar.Classes.SavePref;
 import pro.rasht.museum.ar.Fragment.Items_Viewpager_market;
 import pro.rasht.museum.ar.Fragment.NonSwipeableViewPager;
+import pro.rasht.museum.ar.Model.HoloModel;
+import pro.rasht.museum.ar.Model.PointModel;
 import pro.rasht.museum.ar.Model.Target;
+import pro.rasht.museum.ar.Model.VrModel;
 import pro.rasht.museum.ar.R;
 import pro.rasht.museum.ar.network.AppController;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -76,10 +69,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        runTimePermission();
         save = new SavePref(this);
         ButterKnife.bind(this);
         NetworkError();
-        loadTarget();
+
+        loadPoint();
+        loadAr();
+        loadVr();
+        loadHolo();
 
 
         //tak,il etelaat
@@ -98,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
         pager = (NonSwipeableViewPager) findViewById(R.id.viewpager);
         Items_Viewpager_market adapter_articles = new Items_Viewpager_market(getSupportFragmentManager());
         pager.setAdapter(adapter_articles);
-        pager.setCurrentItem(4, false);
-        pager.setOffscreenPageLimit(4);
+        pager.setCurrentItem(0, false);
+        pager.setOffscreenPageLimit(0);
 
 
         //defult property View
@@ -164,6 +162,25 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    //permission method
+    public void runTimePermission(){
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            RuntimePermissionHelper runtimePermissionHelper = RuntimePermissionHelper.getInstance(this);
+            if (runtimePermissionHelper.isAllPermissionAvailable()) {
+                // All permissions available. Go with the flow
+            } else {
+                // Few permissions not granted. Ask for ungranted permissions
+                runtimePermissionHelper.setActivity(this);
+                runtimePermissionHelper.requestPermissionsIfDenied();
+            }
+        } else {
+            // SDK below API 23. Do nothing just go with the flow.
+        }
+
+
+    }
+
 
 
 
@@ -182,8 +199,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void loadTarget() {
-        JsonArrayRequest req = new JsonArrayRequest(AppController.URL_TARGET,
+    private void loadPoint() {
+        JsonArrayRequest req = new JsonArrayRequest(AppController.URL_POINT,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Log.e("TAG---------OK", response.toString());
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+
+                                JSONObject object = response.getJSONObject(i);
+
+                                PointModel holoModel = new PointModel(
+                                        object.getString("id"),
+                                        object.getString("id_user"),
+                                        object.getString("isar"),
+                                        object.getString("isvr"),
+                                        object.getString("isholo"),
+                                        object.getString("geo"),
+                                        object.getString("fullname"),
+                                        object.getString("description"),
+                                        object.getString("phone"),
+                                        object.getString("address"),
+                                        object.getString("image"),
+                                        object.getString("ishistory")
+                                );
+
+                                AppController.POINTMODEL.add(holoModel);
+                            }
+                            AppController.POINTMODEL_NUMBERS = response.length();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("TAG------------Error", "Error: " + error.getMessage());
+            }
+        });
+        req.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(req, "loadVr");
+    }
+    private void loadAr() {
+        JsonArrayRequest req = new JsonArrayRequest(AppController.URL_AR,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -219,8 +280,82 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         req.setShouldCache(false);
-        AppController.getInstance().addToRequestQueue(req, "loadTarget");
+        AppController.getInstance().addToRequestQueue(req, "loadAr");
     }
+    private void loadVr() {
+        JsonArrayRequest req = new JsonArrayRequest(AppController.URL_VR,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Log.e("TAG---------OK", response.toString());
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+
+                                JSONObject object = response.getJSONObject(i);
+
+                                VrModel vrModel = new VrModel(
+                                        object.getString("id"),
+                                        object.getString("id_user"),
+                                        object.getString("id_point"),
+                                        object.getString("url")
+                                );
+
+                                AppController.VRMODEL.add(vrModel);
+                            }
+                            AppController.VRMODEL_NUMBERS = response.length();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("TAG------------Error", "Error: " + error.getMessage());
+            }
+        });
+        req.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(req, "loadVr");
+    }
+    private void loadHolo() {
+        JsonArrayRequest req = new JsonArrayRequest(AppController.URL_HOLO,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Log.e("TAG---------OK", response.toString());
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+
+                                JSONObject object = response.getJSONObject(i);
+
+                                HoloModel holoModel = new HoloModel(
+                                        object.getString("id"),
+                                        object.getString("id_user"),
+                                        object.getString("id_point"),
+                                        object.getString("url")
+                                );
+
+                                AppController.HOLOMODEL.add(holoModel);
+                            }
+                            AppController.HOLOMODEL_NUMBERS = response.length();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("TAG------------Error", "Error: " + error.getMessage());
+            }
+        });
+        req.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(req, "loadVr");
+    }
+
+
 
 
     public void NetworkError(){
@@ -233,8 +368,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

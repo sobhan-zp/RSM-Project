@@ -115,25 +115,19 @@ public class EnterProfileActivity extends AppCompatActivity {
 
                 } else {
 
-                    save.save(AppController.SAVE_USER_Name, etNameProfile.getText().toString());
-                    save.save(AppController.SAVE_USER_Family, etfamilyProfile.getText().toString());
-                    save.save(AppController.SAVE_USER_STATE, etStateProfile.getText().toString());
-                    save.save(AppController.SAVE_USER_CITY, city.get(etCityProfile.getSelectedItemPosition()));
-                    save.save(AppController.SAVE_USER_MOBILE, etPhoneProfile.getText().toString());
-                    save.save(AppController.SAVE_USER_EMAIL, etEmailProfile.getText().toString());
-
-
-
                     dialog.setMessage("ورود...");
                     dialog.show();
+
+                    String citysave = city.get(etCityProfile.getSelectedItemPosition());
 
                     signup(
                             etNameProfile.getText().toString(),
                             etfamilyProfile.getText().toString(),
-                            etPhoneProfile.getText().toString(),
+                            save.load(AppController.SAVE_USER_MOBILE, " "),
                             String.valueOf(etCityProfile.getSelectedItemPosition()),
                             etStateProfile.getText().toString(),
-                            etEmailProfile.getText().toString()
+                            etEmailProfile.getText().toString(),
+                            citysave
                     );
                 }
 
@@ -146,7 +140,7 @@ public class EnterProfileActivity extends AppCompatActivity {
 
 
 
-    private void signup(String fname, String lname, String phone,String city ,  String state , String email) {
+    private void signup(String fname, String lname, String phone,String city ,  String state , String email, String citysave) {
 
         Map<String, String> params = new HashMap<>();
         params.put("fname", fname);
@@ -169,6 +163,15 @@ public class EnterProfileActivity extends AppCompatActivity {
 
                         save.save(AppController.SAVE_LOGIN, "1");
                         save.save(AppController.SAVE_COMPLETE_PROFILE, "1");
+
+                        save.save(AppController.SAVE_USER_Name, etNameProfile.getText().toString());
+                        save.save(AppController.SAVE_USER_Family, etfamilyProfile.getText().toString());
+                        save.save(AppController.SAVE_USER_STATE, etStateProfile.getText().toString());
+                        save.save(AppController.SAVE_USER_CITY, citysave);
+                        //save.save(AppController.SAVE_USER_MOBILE, etPhoneProfile.getText().toString());
+                        save.save(AppController.SAVE_USER_EMAIL, etEmailProfile.getText().toString());
+
+
                         //save.save(AppController.SAVE_USER_ID, resp.getString("id"));
 
                         AppController.message(EnterProfileActivity.this, "تکمیل اطلاعات");

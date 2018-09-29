@@ -11,6 +11,9 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
 
+import pro.rasht.museum.ar.Model.HoloModel;
+import pro.rasht.museum.ar.Model.PointModel;
+import pro.rasht.museum.ar.Model.VrModel;
 import pro.rasht.museum.ar.R;
 import pro.rasht.museum.ar.Model.Target;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -27,32 +30,49 @@ public class AppController extends Application {
 
     public final static String URL = "http://archism.direct/rsm/index.php/api/";
 
-    public final static String URL_TARGET = URL + "ar/";
-    public final static String URL_TARGET_DETAIL = URL + "ar/detail/";
+    public final static String URL_POINT = URL + "point/";
+    public final static String URL_POINT_DETAIL = URL + "point/detail/";
+
+    public final static String URL_AR = URL + "ar/";
+    public final static String URL_AR_DETAIL = URL + "ar/detail/";
+
+    public final static String URL_VR = URL + "vr/";
+    public final static String URL_VR_DETAIL = URL + "vr/detail/";
+
+    public final static String URL_HOLO = URL + "holo/";
+    public final static String URL_HOLO_DETAIL = URL + "holo/detail/";
+
 
 
     public final static String URL_SIGNUP = URL + "user/signup";
-    public final static String SAVE_LOGIN = "SAVE_LOGIN";
 
+
+    public final static String SAVE_LOGIN = "SAVE_LOGIN";
     public final static String SAVE_USER_ID = "SAVE_USER_ID";
+
     public final static String SAVE_USER_Name = "SAVE_USER_NAME";
     public final static String SAVE_USER_Family = "SAVE_USER_Family";
     public final static String SAVE_USER_STATE = "SAVE_USER_STATE";
     public final static String SAVE_USER_CITY = "SAVE_USER_CITY";
     public final static String SAVE_USER_EMAIL = "SAVE_USER_EMAIL";
     public final static String SAVE_USER_MOBILE = "SAVE_USER_MOBILE";
+
     public final static String SAVE_USER_ACTIVE = "SAVE_USER_ACTIVE";
 
     public final static String SAVE_COMPLETE_PROFILE = "SAVE_COMPLETE_PROFILE";
-
-
 
     public static String SAVE_PATH = "SAVE_LOGIN";
 
 
     public static ArrayList<String> TARGET_PATH = new ArrayList<>();
     public static ArrayList<Target> TARGET = new ArrayList<>();
+    public static ArrayList<VrModel> VRMODEL = new ArrayList<>();
+    public static ArrayList<HoloModel> HOLOMODEL = new ArrayList<>();
+    public static ArrayList<PointModel> POINTMODEL = new ArrayList<>();
     public static int TARGET_NUMBERS = 0;
+    public static int VRMODEL_NUMBERS = 0;
+    public static int HOLOMODEL_NUMBERS = 0;
+    public static int POINTMODEL_NUMBERS = 0;
 
 
     private RequestQueue mRequestQueue;

@@ -34,8 +34,6 @@ public class FragmentProfile extends Fragment {
     CircularImageView profileImage;
     @BindView(R.id.btn_insert_location_profile)
     Button btnInsertLocationProfile;
-
-
     @BindView(R.id.tv_name_profile)
     TextView tvNameProfile;
     @BindView(R.id.tv_family_profile)
@@ -73,6 +71,17 @@ public class FragmentProfile extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         save = new SavePref(context);
 
+
+
+        tvNameProfile.append(save.load(AppController.SAVE_USER_Name, " "));
+        tvFamilyProfile.append(save.load(AppController.SAVE_USER_Family, " "));
+        tvStateProfile.append(save.load(AppController.SAVE_USER_STATE, " "));
+        tvCityProfile.append(save.load(AppController.SAVE_USER_CITY, " "));
+        tvEmailProfile.append(save.load(AppController.SAVE_USER_EMAIL, " "));
+        tvPhoneProfile.append(save.load(AppController.SAVE_USER_MOBILE, " "));
+
+
+
         //java code
         btnInsertProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,14 +109,6 @@ public class FragmentProfile extends Fragment {
                 getActivity().finish();
             }
         });
-
-
-        tvNameProfile.append(save.load(AppController.SAVE_USER_Name, ""));
-        tvFamilyProfile.append(save.load(AppController.SAVE_USER_Family, ""));
-        tvStateProfile.append(save.load(AppController.SAVE_USER_STATE, ""));
-        tvCityProfile.append(save.load(AppController.SAVE_USER_CITY, ""));
-        tvPhoneProfile.append(save.load(AppController.SAVE_USER_MOBILE, ""));
-        tvEmailProfile.append(save.load(AppController.SAVE_USER_EMAIL, ""));
 
 
         ///java code

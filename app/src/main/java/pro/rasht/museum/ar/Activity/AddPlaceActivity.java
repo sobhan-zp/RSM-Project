@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -81,6 +84,9 @@ public class AddPlaceActivity extends AppCompatActivity {
     @BindView(R.id.btn_controller_video)
     ImageView btnControllerVideo;
 
+    @BindView(R.id.textViewResponse)
+    TextView textViewResponse;
+
     SavePref save;
     ProgressDialog dialog;
     ArrayList<String> city;
@@ -128,20 +134,7 @@ public class AddPlaceActivity extends AppCompatActivity {
 
                 } else {
 
-                    save.save(AppController.SAVE_USER_Name, etNamePlace.getText().toString());
-                    save.save(AppController.SAVE_USER_Family, etDescPlace.getText().toString());
-                    save.save(AppController.SAVE_USER_CITY, etAddressPlace.getText().toString());
-                    save.save(AppController.SAVE_USER_MOBILE, etMobilePlace.getText().toString());
 
-                    dialog.setMessage("ورود...");
-                    dialog.show();
-                    signup(
-                            etNamePlace.getText().toString(),
-                            etDescPlace.getText().toString(),
-                            etMobilePlace.getText().toString(),
-                            etAddressPlace.getText().toString()
-                            //String.valueOf(etCityPlace.getSelectedItemPosition()),
-                    );
                 }
 
 
@@ -499,6 +492,9 @@ public class AddPlaceActivity extends AppCompatActivity {
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 uploading.dismiss();
+
+                Log.e("Clip-------------" , "<b>Uploaded at <a href='" + s + "'>" + s + "</a></b>");
+
                 //textViewResponse.setText(Html.fromHtml("<b>Uploaded at <a href='" + s + "'>" + s + "</a></b>"));
                 //textViewResponse.setMovementMethod(LinkMovementMethod.getInstance());
             }

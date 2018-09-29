@@ -81,7 +81,7 @@
         </activity>
         <activity android:name=".Activity.AddPlaceActivity" />
         <activity android:name=".Activity.MapPlaceActivity" />
-        <activity android:name=".Activity.NetworkErrorActivity"></activity>
+        <activity android:name=".Activity.NetworkErrorActivity"/>
     </application>
 
 </manifest>
