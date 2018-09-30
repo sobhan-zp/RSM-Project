@@ -28,10 +28,12 @@ public class AppController extends Application {
     public static final String TAG = AppController.class.getSimpleName();
 
 
-    public final static String URL = "http://archism.direct/rsm/index.php/api/";
+    public final static String BASE = "http://192.168.1.22/rsm/";
+    public final static String URL = BASE + "index.php/api/";
 
     public final static String URL_POINT = URL + "point/";
     public final static String URL_POINT_DETAIL = URL + "point/detail/";
+    public final static String URL_POINT_ADD = URL + "point/add/";
 
     public final static String URL_AR = URL + "ar/";
     public final static String URL_AR_DETAIL = URL + "ar/detail/";
@@ -43,25 +45,24 @@ public class AppController extends Application {
     public final static String URL_HOLO_DETAIL = URL + "holo/detail/";
 
 
-
     public final static String URL_SIGNUP = URL + "user/signup";
+
+
+    public final static String UPLOAD_URL = BASE + "VideoUpload/upload.php";
 
 
     public final static String SAVE_LOGIN = "SAVE_LOGIN";
     public final static String SAVE_USER_ID = "SAVE_USER_ID";
-
     public final static String SAVE_USER_Name = "SAVE_USER_NAME";
     public final static String SAVE_USER_Family = "SAVE_USER_Family";
     public final static String SAVE_USER_STATE = "SAVE_USER_STATE";
     public final static String SAVE_USER_CITY = "SAVE_USER_CITY";
     public final static String SAVE_USER_EMAIL = "SAVE_USER_EMAIL";
     public final static String SAVE_USER_MOBILE = "SAVE_USER_MOBILE";
-
-    public final static String SAVE_USER_ACTIVE = "SAVE_USER_ACTIVE";
-
     public final static String SAVE_COMPLETE_PROFILE = "SAVE_COMPLETE_PROFILE";
-
-    public static String SAVE_PATH = "SAVE_LOGIN";
+    public final static String SAVE_VIDEO_URL = "SAVE_VIDEO_URL";
+    public final static String SAVE_IMAGE_URL = "SAVE_IMAGE_URL";
+    public final static String SAVE_GEO = "SAVE_GEO";
 
 
     public static ArrayList<String> TARGET_PATH = new ArrayList<>();

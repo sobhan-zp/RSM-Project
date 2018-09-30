@@ -91,6 +91,11 @@ public class AddPlaceActivity extends AppCompatActivity {
     ProgressDialog dialog;
     ArrayList<String> city;
     ArrayAdapter adapter;
+
+    ProgressDialog uploading;
+
+    boolean uploadvideo;
+
     //choose image and video
     private static final String IMAGE_DIRECTORY = "/demonuts";
 
@@ -113,7 +118,6 @@ public class AddPlaceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
                 if (!isNetworkAvailable()) {
                     AppController.message(AddPlaceActivity.this, "لطفا اتصال به اینترنت خود را برسی کنید");
                     return;
@@ -134,11 +138,16 @@ public class AddPlaceActivity extends AppCompatActivity {
 
                 } else {
 
-
+                    uploadVideo(
+                            etNamePlace.getText().toString(),
+                            etDescPlace.getText().toString(),
+                            etMobilePlace.getText().toString(),
+                            etAddressPlace.getText().toString()
+                    );
                 }
 
 
-                uploadVideo();
+
 
             }
         });
@@ -153,8 +162,62 @@ public class AddPlaceActivity extends AppCompatActivity {
         addImageVideoAr();
         addVideoAr();
         loadimgGg();
+        loadVideo();
 
 
+    }
+
+    private void addPlace(String idu, String isar, String geo, String name,
+                          String des, String mobile, String add, String img) {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("idu", idu);
+        params.put("isar", isar);
+        params.put("geo", geo);
+        params.put("name", name);
+        params.put("des", des);
+        params.put("mobile", mobile);
+        params.put("add", add);
+        params.put("img", img);
+        params.put("arimage", save.load(AppController.SAVE_IMAGE_URL,"null"));
+        params.put("arvideo", save.load(AppController.SAVE_VIDEO_URL,"null"));
+
+        CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST, AppController.URL_POINT_ADD, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONObject resp = response;
+                //Log.e("TAG--------OK", resp.toString());
+
+                try {
+                    if (resp.getString("status").equals("200")) {
+
+                        AppController.message(AddPlaceActivity.this, "انتخاب شما ارسال شد ", Toast.LENGTH_LONG);
+                        uploadvideo = false;
+
+                    } else if (resp.getString("status").equals("402")) {
+                        AppController.message(AddPlaceActivity.this, "خطای در ذخیره اطلاعات بوجود آمده است");
+                    } else {
+                        AppController.message(AddPlaceActivity.this, "لطفا مجدد سعی کنید");
+                    }
+
+                    uploading.dismiss();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (uploading.isShowing()) uploading.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("TAG--------Error", "Error: " + error.getMessage());
+                AppController.message(AddPlaceActivity.this, "لطفا در زمان دیگری اقدام کنید");
+                if (uploading.isShowing()) uploading.dismiss();
+            }
+        });
+        jsonObjReq.setShouldCache(false);
+        //myRequestQueue.getCache().clear();
+        AppController.getInstance().addToRequestQueue(jsonObjReq, "addPlace");
     }
 
 
@@ -170,119 +233,6 @@ public class AddPlaceActivity extends AppCompatActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-
-    private void signup(String fname, String lname, String phone, String city) {
-
-        Map<String, String> params = new HashMap<>();
-        params.put("fname", fname);
-        params.put("lname", lname);
-        params.put("phone", phone);
-        params.put("city", city);
-
-
-        CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST, AppController.URL_SIGNUP, params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                JSONObject resp = response;
-                //Log.d("TAG--------OK", resp.toString());
-
-                try {
-                    if (resp.getString("status").equals("200")) {
-
-                        save.save(AppController.SAVE_LOGIN, "1");
-                        //save.save(AppController.SAVE_USER_ID, resp.getString("id"));
-
-                        AppController.message(AddPlaceActivity.this, "تکمیل اطلاعات");
-                        startActivity(new Intent(AddPlaceActivity.this, MainActivity.class));
-                        finish();
-
-                    } else if (resp.getString("status").equals("403")) {
-                        AppController.message(AddPlaceActivity.this, "شماره موبایل تکراری می باشد");
-                    } else if (resp.getString("status").equals("402")) {
-                        AppController.message(AddPlaceActivity.this, "خطا در سرور لطفا بعدا سعی کنید");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                if (dialog.isShowing()) dialog.dismiss();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("TAG--------Error", "Error: " + error.getMessage());
-                AppController.message(AddPlaceActivity.this, "لطفا در زمان دیگری اقدام کنید");
-                if (dialog.isShowing()) dialog.dismiss();
-            }
-        });
-        jsonObjReq.setShouldCache(false);
-        //myRequestQueue.getCache().clear();
-        AppController.getInstance().addToRequestQueue(jsonObjReq, "REGISTER");
-
-    }
-
-
-    private void fillcity() {
-        city = new ArrayList<>();
-
-        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, city);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //tCityPlace.setAdapter(adapter);
-
-        city.add("آستارا");
-        city.add("آستانه اشرفیه");
-        city.add("املش");
-        city.add("بندر انزلی");
-        city.add("تالش");
-        city.add("رشت");
-        city.add("رضوان‌شهر");
-        city.add("رودسر");
-        city.add("رودبار");
-        city.add("شفت");
-        city.add("صومعه‌سرا");
-        city.add("فومن");
-        city.add("کوچصفهان");
-        city.add("لاهیجان");
-        city.add("لنگرود");
-        city.add("ماسال");
-        city.add("آذربايجان شرقي");
-        city.add("آذربايجان غربي");
-        city.add("اردبيل");
-        city.add("اصفهان");
-        city.add("البرز");
-        city.add("ايلام");
-        city.add("بوشهر");
-        city.add("تهران");
-        city.add("چهارمحال بختياري");
-        city.add("خراسان جنوبي");
-        city.add("خراسان رضوي");
-        city.add("خراسان شمالي");
-        city.add("خوزستان");
-        city.add("زنجان");
-        city.add("سمنان");
-        city.add("سيستان و بلوچستان");
-        city.add("فارس");
-        city.add("قزوين");
-        city.add("قم");
-        city.add("كردستان");
-        city.add("كرمان");
-        city.add("كرمانشاه");
-        city.add("كهكيلويه و بويراحمد");
-        city.add("گلستان");
-        city.add("گيلان");
-        city.add("لرستان");
-        city.add("مازندران");
-        city.add("مركزي");
-        city.add("هرمزگان");
-        city.add("همدان");
-        city.add("يزد");
-
-        adapter.notifyDataSetChanged();
-    }
-
-
-
 
 
     private void addImageVideoAr() {
@@ -355,7 +305,6 @@ public class AddPlaceActivity extends AppCompatActivity {
 
 
     private void loadimgGg() {
-
         try {
 
             if (!save.load("imgBg", "").equals("")) {
@@ -365,12 +314,25 @@ public class AddPlaceActivity extends AppCompatActivity {
                 BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(save.load("imgBg", ""), options));
                 imgArPlace.setBackgroundDrawable(background);
             }
-
         } catch (Exception e) {
 
         }
+    }
 
 
+    private void loadVideo() {
+        try {
+
+            if (!save.load("vid", "").equals("")) {
+
+                videoArPlace.setVisibility(View.VISIBLE);
+                btnControllerVideo.setVisibility(View.VISIBLE);
+                videoArPlace.setVideoPath(save.load("vid", ""));
+                videoArPlace.start();
+            }
+        } catch (Exception e) {
+
+        }
     }
 
 
@@ -441,6 +403,89 @@ public class AddPlaceActivity extends AppCompatActivity {
     }
 
 
+    //Upload Video To Server
+    private void uploadVideo(String name, String desc, String mobile, String add) {
+
+        class UploadVideo extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                uploading = ProgressDialog.show(AddPlaceActivity.this, "در حال ارسال رسانه و ارسال", "لطفا صبر کنید...", false, false);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                //uploading.dismiss();
+
+
+                save.save("vid", selectedPath);
+                save.save(AppController.SAVE_VIDEO_URL, s);
+                uploadvideo = true;
+
+                //save.load(AppController.SAVE_USER_ID,"0"),
+                addPlace(
+                        "10",
+                        "1",
+                        save.load(AppController.SAVE_GEO,"0"),
+                        name,
+                        desc,
+                        mobile,
+                        add,
+                        "http"
+                );
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                Upload u = new Upload();
+                String msg = u.uploadVideo(selectedPath);
+                return msg;
+            }
+        }
+        UploadVideo uv = new UploadVideo();
+        uv.execute();
+    }
+
+
+    //for video
+    private void chooseVideo() {
+        Intent intent = new Intent();
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select a Video "), SELECT_VIDEO);
+    }
+    public String getPath(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = getContentResolver().query(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+        cursor.close();
+
+        return path;
+    }
+
+    //Dialog Choose Gallery and Camera
+    public void choosePhotoFromGallary() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+
+        startActivityForResult(galleryIntent, GALLERY);
+    }
+    private void takePhotoFromCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAMERA);
+    }
+
     //Save Image To FIle
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -473,82 +518,6 @@ public class AddPlaceActivity extends AppCompatActivity {
         }
 
         return "";
-    }
-
-    //Upload Video To Server
-    private void uploadVideo() {
-
-        class UploadVideo extends AsyncTask<Void, Void, String> {
-
-            ProgressDialog uploading;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                uploading = ProgressDialog.show(AddPlaceActivity.this, "Uploading File", "Please wait...", false, false);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                uploading.dismiss();
-
-                Log.e("Clip-------------" , "<b>Uploaded at <a href='" + s + "'>" + s + "</a></b>");
-
-                //textViewResponse.setText(Html.fromHtml("<b>Uploaded at <a href='" + s + "'>" + s + "</a></b>"));
-                //textViewResponse.setMovementMethod(LinkMovementMethod.getInstance());
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                Upload u = new Upload();
-                String msg = u.uploadVideo(selectedPath);
-                return msg;
-            }
-        }
-        UploadVideo uv = new UploadVideo();
-        uv.execute();
-    }
-
-
-    //for video
-    private void chooseVideo() {
-        Intent intent = new Intent();
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select a Video "), SELECT_VIDEO);
-    }
-
-    public String getPath(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        String document_id = cursor.getString(0);
-        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
-        cursor.close();
-
-        cursor = getContentResolver().query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
-        cursor.moveToFirst();
-        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
-        cursor.close();
-
-        return path;
-    }
-
-
-    //Dialog Choose Gallery and Camera
-    public void choosePhotoFromGallary() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-
-        startActivityForResult(galleryIntent, GALLERY);
-    }
-
-    private void takePhotoFromCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
     }
 
 }

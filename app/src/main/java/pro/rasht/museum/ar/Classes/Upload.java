@@ -12,9 +12,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Upload {
+import pro.rasht.museum.ar.network.AppController;
 
-    public static final String UPLOAD_URL= "http://192.168.1.14/VideoUpload/upload.php";
+public class Upload {
 
     private int serverResponseCode;
 
@@ -28,7 +28,7 @@ public class Upload {
         String boundary = "*****";
         int bytesRead, bytesAvailable, bufferSize;
         byte[] buffer;
-        int maxBufferSize = 50 * 2048 * 2048;
+        int maxBufferSize = 25 * 1024 * 1024;
 
         File sourceFile = new File(file);
         if (!sourceFile.isFile()) {
@@ -38,7 +38,7 @@ public class Upload {
 
         try {
             FileInputStream fileInputStream = new FileInputStream(sourceFile);
-            URL url = new URL(UPLOAD_URL);
+            URL url = new URL(AppController.UPLOAD_URL);
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoInput(true);
             conn.setDoOutput(true);
@@ -97,7 +97,7 @@ public class Upload {
             }
             return sb.toString();
         }else {
-            return "Could not upload";
+            return "Could not upload. "+ serverResponseCode;
         }
     }
 }
