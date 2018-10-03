@@ -13,12 +13,13 @@ public class PointModel {
     private String phone;
     private String address;
     private String image;
+    private String voice;
     private String ishistory;
 
     public PointModel() {
     }
 
-    public PointModel(String id, String iduser, String isar, String isvr, String isholo, String geo, String fullname, String description, String phone, String address, String image, String ishistory) {
+    public PointModel(String id, String iduser, String isar, String isvr, String isholo, String geo, String fullname, String description, String phone, String address, String image, String voice, String ishistory) {
         this.id = id;
         this.iduser = iduser;
         this.isar = isar;
@@ -30,6 +31,7 @@ public class PointModel {
         this.phone = phone;
         this.address = address;
         this.image = image;
+        this.voice = voice;
         this.ishistory = ishistory;
     }
 
@@ -119,6 +121,14 @@ public class PointModel {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getVoice() {
+        return voice;
+    }
+
+    public void setVoice(String voice) {
+        this.voice = voice;
     }
 
     public String getIshistory() {

@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.android.volley.Response;
@@ -222,8 +223,10 @@ public class MainActivity extends AppCompatActivity {
                                         object.getString("phone"),
                                         object.getString("address"),
                                         object.getString("image"),
+                                        object.getString("voice"),
                                         object.getString("ishistory")
                                 );
+
 
                                 AppController.POINTMODEL.add(holoModel);
                             }
@@ -242,6 +245,10 @@ public class MainActivity extends AppCompatActivity {
         });
         req.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(req, "loadVr");
+
+
+
+        Toast.makeText(MainActivity.this, ""+AppController.POINTMODEL.size(), Toast.LENGTH_SHORT).show();
     }
     private void loadAr() {
         JsonArrayRequest req = new JsonArrayRequest(AppController.URL_AR,

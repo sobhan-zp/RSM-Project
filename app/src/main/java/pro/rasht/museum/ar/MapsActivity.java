@@ -1,10 +1,8 @@
 package pro.rasht.museum.ar;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -17,6 +15,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,8 +79,10 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pro.rasht.museum.ar.Activity.MainActivity;
+import pro.rasht.museum.ar.Classes.SavePref;
 import pro.rasht.museum.ar.ar.ArBeyondarGLSurfaceView;
 import pro.rasht.museum.ar.ar.OnTouchBeyondarViewListenerMod;
+import pro.rasht.museum.ar.network.AppController;
 import pro.rasht.museum.ar.network.DirectionsJSONParser;
 import pro.rasht.museum.ar.network.PlaceResponse;
 import pro.rasht.museum.ar.network.PoiResponse;
@@ -102,14 +105,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleMap.OnMarkerClickListener,
         LocationListener,
         OnClickBeyondarObjectListener,
-        OnTouchBeyondarViewListenerMod,
-        View.OnClickListener {
+        OnTouchBeyondarViewListenerMod {
 
     final Context context = this;
 
     private static final String TAG = "MapsActivity";
 
-
+    SavePref save;
 
     private GoogleMap mMap;
     private double longitude;
@@ -152,6 +154,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private World world;
     List<Result> poiResult;
 
+
+    static final String AUDIO_PATH =
+            "http://dl.pop-music.ir/music/1397/Shahrivar/Javad%20Kamalirad%20-%20Salare%20Zeinab%20(128).mp3";
+    private MediaPlayer mediaPlayer;
+    private int playbackPosition = 0;
+
+
     @BindView(R.id.dialog_place_detail)
     CardView dialog_cardview;
     @BindView(R.id.dialog_place_close_btn)
@@ -168,14 +177,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ProgressBar dialog_browser_progress;
     @BindView(R.id.dialog_place_maps_direction)
     Button dialog_place_maps_btn;
-    @BindView(R.id.tv_desc_point_map)
-    TextView tvDescPointMap;
-    @BindView(R.id.tv_other_point_map)
-    TextView tvOtherPointMap;
-    /*@BindView(R.id.seekBar)
-    SeekBar seekbar;
-    @BindView(R.id.seekbar_cardview)
-    CardView seekbar_cardview;*/
+    @BindView(R.id.btn_history_point_maps)
+    Button btnHistoryPointMaps;
+    @BindView(R.id.btn_placeId_point_maps)
+    Button btnPlaceIdPointMaps;
+
+    //Padkast Dialog
+    @BindView(R.id.seekBar_maps)
+    SeekBar seekBarMaps;
+    @BindView(R.id.media_pause_maps)
+    ImageView mediaPauseMaps;
+    @BindView(R.id.songDuration_maps)
+    TextView songDurationMaps;
+    @BindView(R.id.media_play_mpas)
+    ImageView mediaPlayMpas;
+
 
 
     @Override
@@ -184,12 +200,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
 
+
         addMap();
         addLines();
         dialog_browser_progress.setVisibility(View.GONE);
         dialog_cardview.setVisibility(View.GONE);
         arNav();
-        otherButtonText();
 
 
     }
@@ -335,13 +351,84 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    @Override
-    public void onClick(View v) {
+    //method
 
+
+    //Click History point or Place Custom
+    public void HistoryOrPlac(View view){
+        switch (view.getId()){
+            case R.id.btn_history_point_maps:
+
+                mMap.clear();
+
+
+                Toast.makeText(context, "" + AppController.POINTMODEL.get(0).getIshistory(), Toast.LENGTH_SHORT).show();
+
+
+                break;
+            case R.id.btn_placeId_point_maps:
+
+
+
+
+                break;
+        }
     }
 
 
-    //method
+
+
+
+
+
+    //Player
+    public void MediaOnclick(View view) {
+        switch (view.getId()) {
+            case R.id.media_play_mpas:
+                try {
+                    //playAudio(AUDIO_PATH);
+                    //playLocalAudio();
+                    //playLocalAudio_UsingDescriptor();3
+                    mediaPlayer.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.media_pause_maps:
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    playbackPosition = mediaPlayer.getCurrentPosition();
+                    mediaPlayer.pause();
+                }
+                break;
+        }
+    }
+
+    private void playAudio(String url) throws Exception {
+        killMediaPlayer();
+
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setDataSource(url);
+        mediaPlayer.prepare();
+        //mediaPlayer.start();
+    }
+
+    private void killMediaPlayer() {
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        killMediaPlayer();
+    }
+    //End Player
+
 
     private void addMap() {
 
@@ -525,7 +612,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     // Start Ar Navigation After Click
-
     private void arNav() {
 
         //dialog_loading_text=(TextView) findViewById(R.id.loading_text);
@@ -606,6 +692,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     void Poi_details_call(String placeid) {
 
         dialog_browser_progress.setVisibility(View.VISIBLE);
+
+        //buffer music
+        try {
+            playAudio(AUDIO_PATH);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -707,9 +801,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     }
                 });
-
-
-
 
 
             }
@@ -925,9 +1016,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // ...
         }
     }
-
-
     // End Ar Navigation After Click
+
 
     private class DownloadTask extends AsyncTask<String, Void, String> {
 
@@ -1070,32 +1160,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             urlConnection.disconnect();
         }
         return data;
-    }
-
-
-
-    //method main Text After Click On other Button
-    private void otherButtonText(){
-        tvOtherPointMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this).create();
-                //alertDialog.setTitle("Alert Dialog Title");
-                alertDialog.setMessage(getString(R.string.lorm_ipisium));
-                // Alert dialog button
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "باشه",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Alert dialog action goes here
-                                // onClick button code here
-                                dialog.dismiss();// use dismiss to cancel alert dialog
-                            }
-                        });
-                alertDialog.show();
-
-            }
-        });
     }
 
 

@@ -76,6 +76,9 @@ public class AppController extends Application {
     public static int POINTMODEL_NUMBERS = 0;
 
 
+
+
+
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
