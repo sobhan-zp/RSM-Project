@@ -28,7 +28,7 @@ public class AppController extends Application {
     public static final String TAG = AppController.class.getSimpleName();
 
 
-    public final static String BASE = "http://192.168.1.22/rsm/";
+    public final static String BASE = "http://192.168.1.253/rsm/";
     public final static String URL = BASE + "index.php/api/";
 
     public final static String URL_POINT = URL + "point/";

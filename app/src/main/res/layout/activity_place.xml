@@ -75,6 +75,7 @@
                             android:background="@android:color/transparent"
                             android:hint="نام : محل/شرکت/فروشگاه و..."
                             android:padding="10dp"
+                            android:text="aaaa"
                             android:textColor="@color/material_grey_600"
                             android:textColorHint="@color/material_grey_300"
                             android:textSize="14sp" />
@@ -105,6 +106,7 @@
                             android:background="@android:color/transparent"
                             android:hint="توضیحات : محل/شرکت/فروشگاه/..."
                             android:padding="10dp"
+                            android:text="aaaa"
                             android:textColor="@color/material_grey_600"
                             android:textColorHint="@color/material_grey_300"
                             android:textSize="14sp" />
@@ -135,6 +137,7 @@
                             android:background="@android:color/transparent"
                             android:hint="شماره تماس : شماره تماس/شماره همراه"
                             android:padding="10dp"
+                            android:text="aaaa"
                             android:textColor="@color/material_grey_600"
                             android:textColorHint="@color/material_grey_300"
                             android:textSize="14sp" />
@@ -165,6 +168,7 @@
                             android:background="@android:color/transparent"
                             android:hint="آدرس : شهر/خیابان/..."
                             android:padding="10dp"
+                            android:text="aaaa"
                             android:textColor="@color/material_grey_600"
                             android:textColorHint="@color/material_grey_300"
                             android:textSize="14sp" />
@@ -349,6 +353,16 @@
 
             <Button
                 android:id="@+id/btn_next_place"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/btn_round"
+                android:text="@string/save" />
+
+
+            <Button
+                android:id="@+id/btn_next_place2"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="center"

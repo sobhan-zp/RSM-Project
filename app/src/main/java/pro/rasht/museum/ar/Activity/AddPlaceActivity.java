@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,9 +32,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,6 +76,10 @@ public class AddPlaceActivity extends AppCompatActivity {
     EditText etMobilePlace;
     @BindView(R.id.btn_next_place)
     Button btnNextPlace;
+
+    @BindView(R.id.btn_next_place2)
+    Button btnNextPlace2;
+
     @BindView(R.id.img_map_place)
     ImageView imgMapPlace;
     @BindView(R.id.btn_add_img_place)
@@ -95,6 +104,14 @@ public class AddPlaceActivity extends AppCompatActivity {
     ProgressDialog uploading;
 
     boolean uploadvideo;
+
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    private static final int PICK_IMAGE_REQUEST= 99;
+    private static final int PICK_IMAGE_REQUEST_PROFILE= 100;
+    Bitmap bitmap;
+    Bitmap bitmap2;
+    String myurl = "http://192.168.1.253/myimage/Upload.php";
 
     //choose image and video
     private static final String IMAGE_DIRECTORY = "/demonuts";
@@ -144,10 +161,38 @@ public class AddPlaceActivity extends AppCompatActivity {
                             etMobilePlace.getText().toString(),
                             etAddressPlace.getText().toString()
                     );
+
+                    //uploadImage();
                 }
 
 
 
+
+            }
+        });
+
+        enterPlaceImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                AlertDialog.Builder pictureDialog = new AlertDialog.Builder(AddPlaceActivity.this);
+                String[] pictureDialogItems = {
+                        "انتخاب از گالری"
+                        };
+                pictureDialog.setItems(pictureDialogItems,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        choosePhotoFromGallaryProfile();
+                                        break;
+                                }
+                            }
+                        });
+
+                pictureDialog.show();
 
             }
         });
@@ -159,6 +204,8 @@ public class AddPlaceActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+
         addImageVideoAr();
         addVideoAr();
         loadimgGg();
@@ -167,6 +214,396 @@ public class AddPlaceActivity extends AppCompatActivity {
 
     }
 
+
+
+
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri filePath = data.getData();
+            try {
+                bitmap2 = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                //Toast.makeText(this, "عکس انتخاب شد", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, ""+bitmap2, Toast.LENGTH_LONG).show();
+                imgArPlace.setImageBitmap(bitmap2);
+
+
+                BitmapDrawable background = new BitmapDrawable(bitmap2);
+                //imgArPlace.setBackgroundDrawable(background);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if (requestCode == PICK_IMAGE_REQUEST_PROFILE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri filePath2 = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath2);
+                //Toast.makeText(this, "عکس انتخاب شد", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, ""+bitmap, Toast.LENGTH_LONG).show();
+
+                enterPlaceImage.setImageBitmap(bitmap);
+                BitmapDrawable background = new BitmapDrawable(bitmap);
+                enterPlaceImage.setBackgroundDrawable(background);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if (requestCode == SELECT_VIDEO) {
+            videoArPlace.setVisibility(View.VISIBLE);
+            btnControllerVideo.setVisibility(View.VISIBLE);
+            System.out.println("SELECT_VIDEO");
+            Uri selectedImageUri = data.getData();
+            selectedPath = getPath(selectedImageUri);
+            videoArPlace.setVideoPath(selectedPath);
+
+            btnControllerVideo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (videoArPlace.isPlaying()) {
+                        btnControllerVideo.setImageResource(R.drawable.ic_play);
+                        videoArPlace.pause();
+                    } else {
+
+                        btnControllerVideo.setImageResource(R.drawable.ic_pause);
+                        videoArPlace.start();
+                    }
+                }
+            });
+
+
+            videoArPlace.start();
+        }
+
+
+       /* if (resultCode == this.RESULT_CANCELED) {
+            return;
+        }
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                Uri contentURI = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                    String path = saveImage(bitmap);
+                    Toast.makeText(AddPlaceActivity.this, "عکس ذخیره شد", Toast.LENGTH_SHORT).show();
+
+
+                    //blure Gallery
+                    //bitmap = new BlureImage(bitmap , 1 , 6).getBitmap();
+                    BitmapDrawable background = new BitmapDrawable(bitmap);
+                    imgArPlace.setBackgroundDrawable(background);
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(AddPlaceActivity.this, "لغو شد", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        } else if (requestCode == CAMERA) {
+            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+
+            //blure Camera
+            //thumbnail = new BlureImage(thumbnail , 1 , 6).getBitmap();
+            BitmapDrawable background = new BitmapDrawable(thumbnail);
+            imgArPlace.setBackgroundDrawable(background);
+            saveImage(thumbnail);
+            Toast.makeText(AddPlaceActivity.this, "عکس ذخیره شد", Toast.LENGTH_SHORT).show();
+
+        } */
+    }
+
+
+
+
+
+    //Netword is True | False
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+
+    //open dialog afret click on btn image ar
+    private void addImageVideoAr() {
+
+        videoArPlace.setVisibility(View.GONE);
+        btnControllerVideo.setVisibility(View.GONE);
+
+        btnAddImgPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                AlertDialog.Builder pictureDialog = new AlertDialog.Builder(AddPlaceActivity.this);
+                String[] pictureDialogItems = {
+                        "انتخاب از گالری"
+                       };
+                pictureDialog.setItems(pictureDialogItems,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        //choosePhotoFromGallary();
+                                        choosePhotoFromGallary();
+                                        break;
+                                    case 1:
+                                        //takePhotoFromCamera();
+                                        break;
+                                }
+                            }
+                        });
+
+                pictureDialog.show();
+
+
+            }
+        });
+
+    }
+
+
+
+    //open dialog afret click on btn video ar
+    private void addVideoAr() {
+
+        btnAddVideoPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                AlertDialog.Builder pictureDialog = new AlertDialog.Builder(AddPlaceActivity.this);
+                String[] pictureDialogItems = {
+                        "انتخاب از گالری",};
+                pictureDialog.setItems(pictureDialogItems,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        chooseVideo();
+                                        break;
+
+                                }
+                            }
+                        });
+
+                pictureDialog.show();
+
+            }
+        });
+
+    }
+
+
+
+    //load image proflie in image view
+    private void loadimgGg() {
+        try {
+
+            if (!save.load("imgBg", "").equals("")) {
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(save.load("imgBg", ""), options));
+                imgArPlace.setBackgroundDrawable(background);
+
+            }
+        } catch (Exception e) {
+
+        }try {
+
+            if (!save.load("imgBgProfile", "").equals("")) {
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(save.load("imgBgProfile", ""), options));
+                enterPlaceImage.setBackgroundDrawable(background);
+
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    //load video proflie in video view
+    private void loadVideo() {
+        try {
+
+            if (!save.load("vid", "").equals("")) {
+
+                videoArPlace.setVisibility(View.VISIBLE);
+                btnControllerVideo.setVisibility(View.VISIBLE);
+                videoArPlace.setVideoPath(save.load("vid", ""));
+                videoArPlace.start();
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+
+
+
+
+
+    //Upload Video To Server
+    private void uploadVideo(String name, String desc, String mobile, String add) {
+
+        class UploadVideo extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                uploading = ProgressDialog.show(AddPlaceActivity.this, "در حال ارسال رسانه و ارسال", "لطفا صبر کنید...", false, false);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                //uploading.dismiss();
+
+
+                save.save("vid", selectedPath);
+                save.save(AppController.SAVE_VIDEO_URL, s);
+                uploadvideo = true;
+
+                //save.load(AppController.SAVE_USER_ID,"0"),
+
+                uploadImageAr(
+                        name,
+                        desc,
+                        mobile,
+                        add
+                );
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                Upload u = new Upload();
+                String msg = u.uploadVideo(selectedPath);
+                return msg;
+            }
+        }
+        UploadVideo uv = new UploadVideo();
+        uv.execute();
+    }
+
+    //Upload Image To Server
+    public void uploadImageAr(String name, String desc, String mobile, String add){
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(AddPlaceActivity.this);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, myurl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+
+                //Log.i("Myresponse",""+s);
+                //Toast.makeText(AddPlaceActivity.this, ""+s, Toast.LENGTH_LONG).show();
+
+                save.save(AppController.SAVE_IMAGE_URL , s);
+
+                uploadImageProfile(
+                        name,
+                        desc,
+                        mobile,
+                        add
+                );
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Mysmart",""+error);
+                Toast.makeText(AddPlaceActivity.this, ""+error, Toast.LENGTH_LONG).show();
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> param = new HashMap<>();
+
+                String images = getStringImage(bitmap2);
+                Log.i("Mynewsam",""+images);
+                param.put("image",images);
+                return param;
+            }
+        };
+
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    //Upload Image Profile To Server
+    public void uploadImageProfile(String name, String desc, String mobile, String add){
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(AddPlaceActivity.this);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, myurl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+
+                //Log.i("Myresponse",""+s);
+                //Toast.makeText(AddPlaceActivity.this, ""+s, Toast.LENGTH_LONG).show();
+
+                //save.save(AppController.SAVE_IMAGE_URL , s);
+
+                addPlace(
+                        "10",
+                        "1",
+                        save.load(AppController.SAVE_GEO,"0"),
+                        name,
+                        desc,
+                        mobile,
+                        add,
+                        s
+                );
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Mysmart",""+error);
+                Toast.makeText(AddPlaceActivity.this, ""+error, Toast.LENGTH_LONG).show();
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> param = new HashMap<>();
+
+                String images = getStringImage(bitmap);
+                Log.i("Mynewsam",""+images);
+                param.put("image",images);
+                return param;
+            }
+        };
+
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    //add place point To server
     private void addPlace(String idu, String isar, String geo, String name,
                           String des, String mobile, String add, String img) {
 
@@ -221,232 +658,21 @@ public class AddPlaceActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+
+
+    //compress image
+    public String getStringImage(Bitmap bitmap){
+        Log.i("MyHitesh",""+bitmap);
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp=Base64.encodeToString(b, Base64.DEFAULT);
+
+
+        return temp;
     }
 
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-
-    private void addImageVideoAr() {
-
-        videoArPlace.setVisibility(View.GONE);
-        btnControllerVideo.setVisibility(View.GONE);
-
-        btnAddImgPlace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                AlertDialog.Builder pictureDialog = new AlertDialog.Builder(AddPlaceActivity.this);
-                String[] pictureDialogItems = {
-                        "انتخاب از گالری",
-                        "انتخاب از دوربین"};
-                pictureDialog.setItems(pictureDialogItems,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        choosePhotoFromGallary();
-                                        break;
-                                    case 1:
-                                        takePhotoFromCamera();
-                                        break;
-                                }
-                            }
-                        });
-
-                pictureDialog.show();
-
-
-            }
-        });
-
-    }
-
-
-    private void addVideoAr() {
-
-        btnAddVideoPlace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                AlertDialog.Builder pictureDialog = new AlertDialog.Builder(AddPlaceActivity.this);
-                String[] pictureDialogItems = {
-                        "انتخاب از گالری",};
-                pictureDialog.setItems(pictureDialogItems,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        chooseVideo();
-                                        break;
-
-                                }
-                            }
-                        });
-
-                pictureDialog.show();
-
-            }
-        });
-
-    }
-
-
-    private void loadimgGg() {
-        try {
-
-            if (!save.load("imgBg", "").equals("")) {
-
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                BitmapDrawable background = new BitmapDrawable(BitmapFactory.decodeFile(save.load("imgBg", ""), options));
-                imgArPlace.setBackgroundDrawable(background);
-            }
-        } catch (Exception e) {
-
-        }
-    }
-
-
-    private void loadVideo() {
-        try {
-
-            if (!save.load("vid", "").equals("")) {
-
-                videoArPlace.setVisibility(View.VISIBLE);
-                btnControllerVideo.setVisibility(View.VISIBLE);
-                videoArPlace.setVideoPath(save.load("vid", ""));
-                videoArPlace.start();
-            }
-        } catch (Exception e) {
-
-        }
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == this.RESULT_CANCELED) {
-            return;
-        }
-        if (requestCode == GALLERY) {
-            if (data != null) {
-                Uri contentURI = data.getData();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                    String path = saveImage(bitmap);
-                    Toast.makeText(AddPlaceActivity.this, "عکس ذخیره شد", Toast.LENGTH_SHORT).show();
-
-
-                    //blure Gallery
-                    //bitmap = new BlureImage(bitmap , 1 , 6).getBitmap();
-                    BitmapDrawable background = new BitmapDrawable(bitmap);
-                    imgArPlace.setBackgroundDrawable(background);
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(AddPlaceActivity.this, "لغو شد", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        } else if (requestCode == CAMERA) {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-
-            //blure Camera
-            //thumbnail = new BlureImage(thumbnail , 1 , 6).getBitmap();
-            BitmapDrawable background = new BitmapDrawable(thumbnail);
-            imgArPlace.setBackgroundDrawable(background);
-            saveImage(thumbnail);
-            Toast.makeText(AddPlaceActivity.this, "عکس ذخیره شد", Toast.LENGTH_SHORT).show();
-
-        } else if (requestCode == SELECT_VIDEO) {
-            videoArPlace.setVisibility(View.VISIBLE);
-            btnControllerVideo.setVisibility(View.VISIBLE);
-            System.out.println("SELECT_VIDEO");
-            Uri selectedImageUri = data.getData();
-            selectedPath = getPath(selectedImageUri);
-            videoArPlace.setVideoPath(selectedPath);
-
-            btnControllerVideo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    if (videoArPlace.isPlaying()) {
-                        btnControllerVideo.setImageResource(R.drawable.ic_play);
-                        videoArPlace.pause();
-                    } else {
-
-                        btnControllerVideo.setImageResource(R.drawable.ic_pause);
-                        videoArPlace.start();
-                    }
-                }
-            });
-
-
-            videoArPlace.start();
-        }
-    }
-
-
-    //Upload Video To Server
-    private void uploadVideo(String name, String desc, String mobile, String add) {
-
-        class UploadVideo extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                uploading = ProgressDialog.show(AddPlaceActivity.this, "در حال ارسال رسانه و ارسال", "لطفا صبر کنید...", false, false);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                //uploading.dismiss();
-
-
-                save.save("vid", selectedPath);
-                save.save(AppController.SAVE_VIDEO_URL, s);
-                uploadvideo = true;
-
-                //save.load(AppController.SAVE_USER_ID,"0"),
-                addPlace(
-                        "10",
-                        "1",
-                        save.load(AppController.SAVE_GEO,"0"),
-                        name,
-                        desc,
-                        mobile,
-                        add,
-                        "http"
-                );
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                Upload u = new Upload();
-                String msg = u.uploadVideo(selectedPath);
-                return msg;
-            }
-        }
-        UploadVideo uv = new UploadVideo();
-        uv.execute();
-    }
 
 
     //for video
@@ -473,51 +699,29 @@ public class AddPlaceActivity extends AppCompatActivity {
         return path;
     }
 
+
+
     //Dialog Choose Gallery and Camera
-    public void choosePhotoFromGallary() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-
-        startActivityForResult(galleryIntent, GALLERY);
+    private void choosePhotoFromGallary() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+    private void choosePhotoFromGallaryProfile() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST_PROFILE);
+    }
+
+    //Dialog Choose Gallery and Camera
     private void takePhotoFromCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA);
     }
 
-    //Save Image To FIle
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
 
-        try {
-            File f = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
-                    new String[]{f.getPath()},
-                    new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.e("TAG", "File Saved::---->" + f.getAbsolutePath());
 
-            save.save("imgBg", f.getAbsolutePath());
-
-            return f.getAbsolutePath();
-        } catch (IOException e1) {
-            Log.e("TAG", "ERROR::---->" + e1.getMessage());
-            e1.printStackTrace();
-        }
-
-        return "";
-    }
 
 }
