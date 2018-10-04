@@ -41,6 +41,7 @@ import com.beyondar.android.view.OnClickBeyondarObjectListener;
 import com.beyondar.android.world.BeyondarObject;
 import com.beyondar.android.world.GeoObject;
 import com.beyondar.android.world.World;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -80,6 +81,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pro.rasht.museum.ar.Activity.MainActivity;
 import pro.rasht.museum.ar.Classes.SavePref;
+import pro.rasht.museum.ar.Model.PointModel;
 import pro.rasht.museum.ar.ar.ArBeyondarGLSurfaceView;
 import pro.rasht.museum.ar.ar.OnTouchBeyondarViewListenerMod;
 import pro.rasht.museum.ar.network.AppController;
@@ -192,7 +194,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @BindView(R.id.media_play_mpas)
     ImageView mediaPlayMpas;
 
-
+    PointModel pointModel = new PointModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +205,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         addMap();
         addLines();
-        dialog_browser_progress.setVisibility(View.GONE);
+        //dialog_browser_progress.setVisibility(View.GONE);
         dialog_cardview.setVisibility(View.GONE);
         arNav();
 
@@ -214,11 +216,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(Marker marker) {
         Log.i("GoogleMapActivity", "onMarkerClick");
-        final String title = marker.getTitle();
 
-       /* Toast.makeText(this,
-                marker.getTitle() + " has been clicked " + " times.",
-                Toast.LENGTH_SHORT).show();*/
+
+        dialog_browser_progress.setVisibility(View.VISIBLE);
+
+
+        for (int i = 0; i < AppController.POINTMODEL.size(); i = i + 1) {
+
+            String a = AppController.POINTMODEL.get(i).getFullname().trim();
+            String b = marker.getTitle().trim();
+
+            if (a.length()==b.length()) {
+
+
+
+
+                pointModel.setId(AppController.POINTMODEL.get(i).getId());
+                pointModel.setIduser(AppController.POINTMODEL.get(i).getIduser());
+                pointModel.setIsar(AppController.POINTMODEL.get(i).getIsar());
+                pointModel.setIsvr(AppController.POINTMODEL.get(i).getIsvr());
+                pointModel.setIsholo(AppController.POINTMODEL.get(i).getIsholo());
+                pointModel.setGeo(AppController.POINTMODEL.get(i).getGeo());
+                pointModel.setFullname(AppController.POINTMODEL.get(i).getFullname());
+                pointModel.setDescription(AppController.POINTMODEL.get(i).getDescription());
+                pointModel.setPhone(AppController.POINTMODEL.get(i).getPhone());
+                pointModel.setAddress(AppController.POINTMODEL.get(i).getAddress());
+                pointModel.setImage(AppController.POINTMODEL.get(i).getImage());
+                pointModel.setVoice(AppController.POINTMODEL.get(i).getVoice());
+                pointModel.setIshistory(AppController.POINTMODEL.get(i).getIshistory());
+
+
+               /* dialog_cardview.setVisibility(View.VISIBLE);
+                dialog_browser_progress.setVisibility(View.GONE);*/
+
+                dialog_place_name.setText(pointModel.getFullname());
+
+                dialog_place_addr.setText(pointModel.getAddress());
+
+                Glide.with(this).load(pointModel.getImage()).into(dialog_place_image);
+
+                //buffer music
+                try {
+                    playAudio(pointModel.getVoice());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+        }
+
 
         clickPosition = marker.getPosition();
 
@@ -355,30 +403,75 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     //Click History point or Place Custom
-    public void HistoryOrPlac(View view){
-        switch (view.getId()){
+    public void HistoryOrPlace(View view) {
+        switch (view.getId()) {
             case R.id.btn_history_point_maps:
 
                 mMap.clear();
 
+                for (int i = 0; i < AppController.POINTMODEL.size(); i = i + 1) {
 
-                Toast.makeText(context, "" + AppController.POINTMODEL.get(0).getIshistory(), Toast.LENGTH_SHORT).show();
+
+                    if (AppController.POINTMODEL.get(i).getIshistory().equals("1")) {
+
+                        AppController.POINTMODEL.get(i).getGeo();
+
+                        String[] a = AppController.POINTMODEL.get(i).getGeo().split(",");
+
+                        LatLng as = new LatLng(Double.parseDouble(a[0]), Double.parseDouble(a[1]));
+
+
+                        mMap.addMarker(
+                                new MarkerOptions()
+                                        .position(as)
+                                        .title(AppController.POINTMODEL.get(i).getFullname())
+                                        .icon(fromResource(R.mipmap.ic_map))
+                        );
+
+
+                        //Toast.makeText(context, "HISTORY" , Toast.LENGTH_SHORT).show();
+
+
+                    }
+
+                }
 
 
                 break;
             case R.id.btn_placeId_point_maps:
 
+                mMap.clear();
 
 
+                for (int i = 0; i < AppController.POINTMODEL.size(); i = i + 1) {
+
+
+                    if (AppController.POINTMODEL.get(i).getIshistory().equals("0")) {
+
+                        AppController.POINTMODEL.get(i).getGeo();
+
+                        String[] a = AppController.POINTMODEL.get(i).getGeo().split(",");
+
+                        LatLng as = new LatLng(Double.parseDouble(a[0]), Double.parseDouble(a[1]));
+
+
+                        mMap.addMarker(
+                                new MarkerOptions()
+                                        .position(as)
+                                        .title(AppController.POINTMODEL.get(i).getFullname())
+                                        .icon(fromResource(R.mipmap.ic_map))
+                        );
+
+                        //Toast.makeText(context, "HISTORY" , Toast.LENGTH_SHORT).show();
+
+
+                    }
+
+                }
 
                 break;
         }
     }
-
-
-
-
-
 
 
     //Player
@@ -629,6 +722,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 //seekbar_cardview.setVisibility(View.VISIBLE);
+
                 dialog_cardview.setVisibility(View.GONE);
                 dialog_place_image.setImageResource(android.R.color.transparent);
                 dialog_place_name.setText(" ");
@@ -691,7 +785,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     void Poi_details_call(String placeid) {
 
-        dialog_browser_progress.setVisibility(View.VISIBLE);
+
 
         //buffer music
         try {
@@ -725,10 +819,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 dialog_cardview.setVisibility(View.VISIBLE);
                 dialog_browser_progress.setVisibility(View.GONE);
 
+
                 final pro.rasht.museum.ar.network.place.Result result = response.body().getResult();
 
-                dialog_place_name.setText(result.getName());
-                dialog_place_addr.setText(result.getFormattedAddress());
+
 
                 try {
                     HttpUrl url = new HttpUrl.Builder()
@@ -787,13 +881,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onClick(View view) {
                         Intent intent = new Intent(MapsActivity.this, ArCamActivity.class);
 
+
+
                         try {
                             intent.putExtra("SRC", "Current Location");
                             intent.putExtra("DEST", result.getGeometry().getLocation().getLat() + "," +
                                     result.getGeometry().getLocation().getLng());
                             intent.putExtra("SRCLATLNG", location.getLatitude() + "," + location.getLongitude());
-                            intent.putExtra("DESTLATLNG", result.getGeometry().getLocation().getLat() + "," +
-                                    result.getGeometry().getLocation().getLng());
+                            intent.putExtra("DESTLATLNG", pointModel.getGeo());
                             startActivity(intent);
                             finish();
                         } catch (NullPointerException npe) {
@@ -819,7 +914,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             dialog_place_image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            dialog_place_image.setImageBitmap(bitmap);
+            //dialog_place_image.setImageBitmap(bitmap);
         }
 
         @Override
@@ -974,7 +1069,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onClickBeyondarObject(ArrayList<BeyondarObject> beyondarObjects) {
         if (beyondarObjects.size() > 0) {
-            Poi_details_call("ChIJbWShqpzYH0ARA_izn4n4cNA");
+            //Poi_details_call("ChIJbWShqpzYH0ARA_izn4n4cNA");
         }
     }
 

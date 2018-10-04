@@ -45,7 +45,7 @@
             android:id="@+id/btn_history_point_maps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="HistoryOrPlac"
+            android:onClick="HistoryOrPlace"
             android:text="نقاط تاریخی"/>
 
 
@@ -54,7 +54,7 @@
             android:id="@+id/btn_placeId_point_maps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="HistoryOrPlac"
+            android:onClick="HistoryOrPlace"
             android:text="نقاط ثبت شده"/>
 
     </LinearLayout>
@@ -119,7 +119,7 @@
                         android:layout_gravity="center"
                         android:layout_centerHorizontal="true"
                         android:layout_margin="7dp"
-                        android:background="@drawable/amozesh1"
+
                         android:scaleType="centerCrop" />
 
                     <!--X-->

@@ -247,8 +247,6 @@ public class MainActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(req, "loadVr");
 
 
-
-        Toast.makeText(MainActivity.this, ""+AppController.POINTMODEL.size(), Toast.LENGTH_SHORT).show();
     }
     private void loadAr() {
         JsonArrayRequest req = new JsonArrayRequest(AppController.URL_AR,
