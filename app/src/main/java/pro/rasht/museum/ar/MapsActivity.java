@@ -16,7 +16,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +32,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,10 +77,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import info.hoang8f.android.segmented.SegmentedGroup;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import pro.rasht.museum.ar.Activity.MainActivity;
 import pro.rasht.museum.ar.Classes.SavePref;
 import pro.rasht.museum.ar.Model.PointModel;
 import pro.rasht.museum.ar.ar.ArBeyondarGLSurfaceView;
@@ -107,7 +108,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleMap.OnMarkerClickListener,
         LocationListener,
         OnClickBeyondarObjectListener,
-        OnTouchBeyondarViewListenerMod {
+        OnTouchBeyondarViewListenerMod,
+        RadioGroup.OnCheckedChangeListener{
 
     final Context context = this;
 
@@ -178,11 +180,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @BindView(R.id.dialog_brwoser_progress)
     ProgressBar dialog_browser_progress;
     @BindView(R.id.dialog_place_maps_direction)
-    Button dialog_place_maps_btn;
+    Button dialogPlaceMapsDirection;
     @BindView(R.id.btn_history_point_maps)
-    Button btnHistoryPointMaps;
+    RadioButton btnHistoryPointMaps;
     @BindView(R.id.btn_placeId_point_maps)
-    Button btnPlaceIdPointMaps;
+    RadioButton btnPlaceIdPointMaps;
+    @BindView(R.id.btn_all_point_maps)
+    RadioButton btnAllPointMaps;
+    @BindView(R.id.segmented3)
+    SegmentedGroup segmented3;
 
     //Padkast Dialog
     @BindView(R.id.seekBar_maps)
@@ -202,7 +208,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
 
-
+        //HistoryOrPlace();
+        segmented3.setOnCheckedChangeListener(this);
         addMap();
         addLines();
         //dialog_browser_progress.setVisibility(View.GONE);
@@ -226,9 +233,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String a = AppController.POINTMODEL.get(i).getFullname().trim();
             String b = marker.getTitle().trim();
 
-            if (a.length()==b.length()) {
-
-
+            if (a.length() == b.length()) {
 
 
                 pointModel.setId(AppController.POINTMODEL.get(i).getId());
@@ -255,12 +260,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 Glide.with(this).load(pointModel.getImage()).into(dialog_place_image);
 
-                //buffer music
+                /*//buffer music
                 try {
                     playAudio(pointModel.getVoice());
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
 
 
             }
@@ -399,62 +404,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    //method
 
 
-    //Click History point or Place Custom
-    public void HistoryOrPlace(View view) {
-        switch (view.getId()) {
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+        switch (checkedId) {
             case R.id.btn_history_point_maps:
 
                 mMap.clear();
-
                 for (int i = 0; i < AppController.POINTMODEL.size(); i = i + 1) {
-
-
                     if (AppController.POINTMODEL.get(i).getIshistory().equals("1")) {
-
-                        AppController.POINTMODEL.get(i).getGeo();
-
                         String[] a = AppController.POINTMODEL.get(i).getGeo().split(",");
-
                         LatLng as = new LatLng(Double.parseDouble(a[0]), Double.parseDouble(a[1]));
-
-
                         mMap.addMarker(
                                 new MarkerOptions()
                                         .position(as)
                                         .title(AppController.POINTMODEL.get(i).getFullname())
                                         .icon(fromResource(R.mipmap.ic_map))
                         );
-
-
-                        //Toast.makeText(context, "HISTORY" , Toast.LENGTH_SHORT).show();
-
-
                     }
-
                 }
 
 
                 break;
             case R.id.btn_placeId_point_maps:
 
+
                 mMap.clear();
+                for (int i = 0; i < AppController.POINTMODEL.size(); i = i + 1) {
+                    if (AppController.POINTMODEL.get(i).getIshistory().equals("0")) {
+                        String[] a = AppController.POINTMODEL.get(i).getGeo().split(",");
+                        LatLng as = new LatLng(Double.parseDouble(a[0]), Double.parseDouble(a[1]));
+                        mMap.addMarker(
+                                new MarkerOptions()
+                                        .position(as)
+                                        .title(AppController.POINTMODEL.get(i).getFullname())
+                                        .icon(fromResource(R.mipmap.ic_map))
+                        );
+                    }
+                }
 
 
+
+                break;
+            case R.id.btn_all_point_maps:
+
+                mMap.clear();
                 for (int i = 0; i < AppController.POINTMODEL.size(); i = i + 1) {
 
-
-                    if (AppController.POINTMODEL.get(i).getIshistory().equals("0")) {
-
-                        AppController.POINTMODEL.get(i).getGeo();
-
                         String[] a = AppController.POINTMODEL.get(i).getGeo().split(",");
-
                         LatLng as = new LatLng(Double.parseDouble(a[0]), Double.parseDouble(a[1]));
-
-
                         mMap.addMarker(
                                 new MarkerOptions()
                                         .position(as)
@@ -462,16 +463,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         .icon(fromResource(R.mipmap.ic_map))
                         );
 
-                        //Toast.makeText(context, "HISTORY" , Toast.LENGTH_SHORT).show();
-
-
-                    }
-
                 }
 
                 break;
+
+            default:
+                // Nothing to do
         }
+
+
     }
+
+
+
+
+
+    /*  ------------- method -------------  */
 
 
     //Player
@@ -482,7 +489,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //playAudio(AUDIO_PATH);
                     //playLocalAudio();
                     //playLocalAudio_UsingDescriptor();3
-                    mediaPlayer.start();
+
+                    //buffer music
+                    try {
+                        playAudio(pointModel.getVoice());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    //mediaPlayer.start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -502,7 +517,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setDataSource(url);
         mediaPlayer.prepare();
-        //mediaPlayer.start();
+        mediaPlayer.start();
     }
 
     private void killMediaPlayer() {
@@ -727,6 +742,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 dialog_place_image.setImageResource(android.R.color.transparent);
                 dialog_place_name.setText(" ");
                 dialog_place_addr.setText(" ");
+                mediaPlayer.stop();
             }
         });
 
@@ -786,13 +802,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     void Poi_details_call(String placeid) {
 
 
-
-        //buffer music
+       /* //buffer music
         try {
             playAudio(AUDIO_PATH);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -823,7 +838,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 final pro.rasht.museum.ar.network.place.Result result = response.body().getResult();
 
 
-
                 try {
                     HttpUrl url = new HttpUrl.Builder()
                             .scheme("https")
@@ -841,7 +855,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Toast.makeText(MapsActivity.this, getString(R.string.no_image_poiActivity), Toast.LENGTH_SHORT).show();
                 }
 
-                dialog_place_maps_btn.setOnClickListener(new View.OnClickListener() {
+                dialogPlaceMapsDirection.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -849,6 +863,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String url = getDirectionsUrl(
                                 new LatLng(location.getLatitude(), location.getLongitude()),
                                 clickPosition);
+
+                        Log.e("Direction-------------" , url);
+
                         DownloadTask downloadTask = new DownloadTask();
                         downloadTask.execute(url);
 
@@ -882,7 +899,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Intent intent = new Intent(MapsActivity.this, ArCamActivity.class);
 
 
-
                         try {
                             intent.putExtra("SRC", "Current Location");
                             intent.putExtra("DEST", result.getGeometry().getLocation().getLat() + "," +
@@ -907,6 +923,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
     }
+
+
+
 
 
     public class PoiPhotoAsync extends AsyncTask<String, Void, Bitmap> {
@@ -1193,7 +1212,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             // Drawing polyline in the Google Map for the i-th route
-            mMap.addPolyline(lineOptions);
+             mMap.addPolyline(lineOptions);
         }
     }
 

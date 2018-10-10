@@ -9,11 +9,13 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
@@ -49,8 +51,8 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/ll_img_enter_profile"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="50dp">
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="30dp">
 
 
                 <LinearLayout
@@ -74,6 +76,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="نام : محل/شرکت/فروشگاه و..."
+                            android:maxLines="1"
                             android:padding="10dp"
                             android:text="aaaa"
                             android:textColor="@color/material_grey_600"
@@ -105,6 +108,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="توضیحات : محل/شرکت/فروشگاه/..."
+                            android:maxLines="1"
                             android:padding="10dp"
                             android:text="aaaa"
                             android:textColor="@color/material_grey_600"
@@ -136,6 +140,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="شماره تماس : شماره تماس/شماره همراه"
+                            android:maxLines="1"
                             android:padding="10dp"
                             android:text="aaaa"
                             android:textColor="@color/material_grey_600"
@@ -167,6 +172,7 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:hint="آدرس : شهر/خیابان/..."
+                            android:maxLines="1"
                             android:padding="10dp"
                             android:text="aaaa"
                             android:textColor="@color/material_grey_600"
@@ -192,16 +198,15 @@
 
 
 
-
             <!-- Card View 2 -->
             <android.support.v7.widget.CardView
                 android:id="@+id/cv_info2_enter_profile"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/ll_img_enter_profile"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="50dp">
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="30dp">
 
 
                 <LinearLayout
@@ -210,15 +215,33 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
+
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_margin="5dp"
-                        android:text="واقعیت افزوده" />
+                        android:orientation="horizontal">
+
+
+                        <com.suke.widget.SwitchButton
+                            android:id="@+id/sw_ar_place"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="right"
+                            android:text="واقعیت افزوده" />
+
+
+                    </RelativeLayout>
 
 
                     <FrameLayout
+                        android:id="@+id/fl_img_place"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -237,23 +260,25 @@
                             android:id="@+id/img_ar_place"
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginLeft="10dp" />
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp" />
 
 
                     </FrameLayout>
 
 
                     <View
+                        android:id="@+id/view_line_place"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
                         android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
                         android:background="@color/material_grey_400" />
 
                     <FrameLayout
+                        android:id="@+id/fl_video_place"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:layout_weight="1"
@@ -269,25 +294,23 @@
                             android:backgroundTint="@color/material_grey_300" />
 
 
+                        <VideoView
+                            android:id="@+id/video_ar_place"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp" />
 
-                            <VideoView
-                                android:id="@+id/video_ar_place"
-                                android:layout_width="match_parent"
-                                android:layout_height="150dp"
-                                android:layout_marginRight="10dp"
-                                android:layout_marginLeft="10dp"/>
 
-
-                             <ImageView
-                                 android:id="@+id/btn_controller_video"
-                                 android:layout_width="30dp"
-                                 android:layout_height="30dp"
-                                 android:layout_marginLeft="15dp"
-                                 android:layout_marginTop="5dp"
-                                 android:orientation="vertical"
-                                 android:tint="@color/white"
-                                 android:src="@drawable/ic_pause" />
-
+                        <ImageView
+                            android:id="@+id/btn_controller_video"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="5dp"
+                            android:orientation="vertical"
+                            android:src="@drawable/ic_pause"
+                            android:tint="@color/white" />
 
 
                     </FrameLayout>
@@ -297,9 +320,8 @@
                         android:id="@+id/textViewResponse"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView" />
-
-
+                        android:text="TextView"
+                        android:visibility="gone" />
 
 
                 </LinearLayout>
@@ -314,10 +336,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/cv_info1_enter_profile"
-                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginTop="30dp">
+                android:layout_marginBottom="10dp">
 
 
                 <LinearLayout
@@ -360,15 +382,6 @@
                 android:background="@drawable/btn_round"
                 android:text="@string/save" />
 
-
-            <Button
-                android:id="@+id/btn_next_place2"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/btn_round"
-                android:text="@string/save" />
 
         </LinearLayout>
 

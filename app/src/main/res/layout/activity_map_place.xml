@@ -67,10 +67,9 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/rounded_corner_map"
                             android:gravity="center"
-                            android:minWidth="250dp"
-                            android:paddingLeft="2dp"
-                            android:paddingRight="2dp"
-                            android:text=" Set your Location "
+                            android:minWidth="100dp"
+                            android:padding="10dp"
+                            android:text="انتخاب نقطه"
                             android:textColor="@android:color/white" />
 
                         <ImageView

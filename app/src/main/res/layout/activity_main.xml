@@ -22,7 +22,9 @@
         android:layout_height="match_parent">
 
 
+
         <android.support.v7.widget.CardView
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             card_view:cardElevation="4dp"
@@ -33,8 +35,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:weightSum="0"
-                tools:ignore="DisableBaselineAlignment"
-                android:id="@+id/linearLayout2">
+                tools:ignore="DisableBaselineAlignment">
 
 
 
@@ -222,6 +223,8 @@
                     </LinearLayout>
 
                 </RelativeLayout>
+
+
 
             </LinearLayout>
 

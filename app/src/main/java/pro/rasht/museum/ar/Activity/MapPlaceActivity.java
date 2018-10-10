@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +43,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.rasht.museum.ar.Classes.Place_AppUtils;
 import pro.rasht.museum.ar.Classes.Place_FetchAddressIntentService;
+import pro.rasht.museum.ar.Classes.SavePref;
 import pro.rasht.museum.ar.R;
+import pro.rasht.museum.ar.network.AppController;
+
+import static pro.rasht.museum.ar.network.AppController.SAVE_USER_GEO;
 
 public class MapPlaceActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
@@ -73,6 +78,8 @@ public class MapPlaceActivity extends AppCompatActivity implements OnMapReadyCal
     TextView mLocationText;
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
 
+    SavePref save;
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +87,17 @@ public class MapPlaceActivity extends AppCompatActivity implements OnMapReadyCal
         setContentView(R.layout.activity_map_place);
         mContext = this;
         ButterKnife.bind(this);
+
+        save = new SavePref(this);
+
+        mLocationMarkerText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //mLocationMarkerText.setText("" + mCenterLatLong.latitude + "," + mCenterLatLong.longitude);
+                save.save(AppController.SAVE_USER_GEO , "" + mCenterLatLong.latitude + "," + mCenterLatLong.longitude);
+                finish();
+            }
+        });
 
         selectLocation();
     }
@@ -166,7 +184,8 @@ public class MapPlaceActivity extends AppCompatActivity implements OnMapReadyCal
                     mLocation.setLongitude(mCenterLatLong.longitude);
 
                     startIntentService(mLocation);
-                    mLocationMarkerText.setText("Lat : " + mCenterLatLong.latitude + "," + "Long : " + mCenterLatLong.longitude);
+
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -335,8 +354,14 @@ public class MapPlaceActivity extends AppCompatActivity implements OnMapReadyCal
             mMap.animateCamera(CameraUpdateFactory
                     .newCameraPosition(cameraPosition));
 
-            mLocationMarkerText.setText("Lat : " + location.getLatitude() + "," + "Long : " + location.getLongitude());
+
+
+            //mLocationMarkerText.setText("Lat : " + location.getLatitude() + "," + "Long : " + location.getLongitude());
+
             startIntentService(location);
+
+            //zp = ""+mCenterLatLong.latitude + "," + mCenterLatLong.longitude;
+
 
 
         } else {

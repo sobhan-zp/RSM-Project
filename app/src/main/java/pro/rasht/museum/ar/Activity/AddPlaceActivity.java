@@ -1,5 +1,6 @@
 package pro.rasht.museum.ar.Activity;
 
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,17 +10,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
+import android.support.v7.widget.CardView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,16 +38,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.suke.widget.SwitchButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,9 +73,9 @@ public class AddPlaceActivity extends AppCompatActivity {
     EditText etMobilePlace;
     @BindView(R.id.btn_next_place)
     Button btnNextPlace;
+    @BindView(R.id.sw_ar_place)
+    SwitchButton swArPlace;
 
-    @BindView(R.id.btn_next_place2)
-    Button btnNextPlace2;
 
     @BindView(R.id.img_map_place)
     ImageView imgMapPlace;
@@ -92,9 +89,19 @@ public class AddPlaceActivity extends AppCompatActivity {
     VideoView videoArPlace;
     @BindView(R.id.btn_controller_video)
     ImageView btnControllerVideo;
+    @BindView(R.id.view_line_place)
+    View viewLinePlace;
+
+    @BindView(R.id.fl_img_place)
+    FrameLayout flImgPlace;
+    @BindView(R.id.fl_video_place)
+    FrameLayout flVideoPlace;
+
 
     @BindView(R.id.textViewResponse)
     TextView textViewResponse;
+    @BindView(R.id.cv_info2_enter_profile)
+    CardView cvInfo2EnterProfile;
 
     SavePref save;
     ProgressDialog dialog;
@@ -107,16 +114,15 @@ public class AddPlaceActivity extends AppCompatActivity {
 
 
     private static final int PERMISSION_REQUEST_CODE = 1;
-    private static final int PICK_IMAGE_REQUEST= 99;
-    private static final int PICK_IMAGE_REQUEST_PROFILE= 100;
+    private static final int PICK_IMAGE_REQUEST = 99;
+    private static final int PICK_IMAGE_REQUEST_PROFILE = 100;
     Bitmap bitmap;
     Bitmap bitmap2;
     String myurl = "http://192.168.1.253/myimage/Upload.php";
 
     //choose image and video
     private static final String IMAGE_DIRECTORY = "/demonuts";
-
-    private int GALLERY = 1, CAMERA = 2 , SELECT_VIDEO = 3;
+    private int GALLERY = 1, CAMERA = 2, SELECT_VIDEO = 3;
     private String selectedPath;
 
 
@@ -125,10 +131,37 @@ public class AddPlaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        //empty point map ()if else
+        save.save(AppController.SAVE_USER_GEO , "0");
+
 
         ButterKnife.bind(this);
         save = new SavePref(this);
         dialog = new ProgressDialog(this);
+
+        swArPlace.setShadowEffect(true);//disable shadow effect
+        swArPlace.setEnabled(true);//disable button
+        swArPlace.setEnableEffect(true);//disable the switch animation
+
+        flImgPlace.setVisibility(View.GONE);
+        flVideoPlace.setVisibility(View.GONE);
+        viewLinePlace.setVisibility(View.GONE);
+
+        swArPlace.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+
+                if (swArPlace.isChecked()) {
+                    flImgPlace.setVisibility(View.VISIBLE);
+                    flVideoPlace.setVisibility(View.VISIBLE);
+                    viewLinePlace.setVisibility(View.VISIBLE);
+                } else {
+                    flImgPlace.setVisibility(View.GONE);
+                    flVideoPlace.setVisibility(View.GONE);
+                    viewLinePlace.setVisibility(View.GONE);
+                }
+            }
+        });
 
 
         btnNextPlace.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +186,18 @@ public class AddPlaceActivity extends AppCompatActivity {
                     etDescPlace.requestFocus();
                     return;
 
+                } else if (etDescPlace.getText().toString().length() <= 1) {
+
+                    AppController.message(AddPlaceActivity.this, "لطفا شماره موبایل خود را وارد کنید");
+                    etMobilePlace.requestFocus();
+                    return;
+
+                } else if (etDescPlace.getText().toString().length() <= 1) {
+
+                    AppController.message(AddPlaceActivity.this, "لطفا آدرس خود را وارد کنید");
+                    etAddressPlace.requestFocus();
+                    return;
+
                 } else {
 
                     uploadVideo(
@@ -166,8 +211,6 @@ public class AddPlaceActivity extends AppCompatActivity {
                 }
 
 
-
-
             }
         });
 
@@ -179,7 +222,7 @@ public class AddPlaceActivity extends AppCompatActivity {
                 AlertDialog.Builder pictureDialog = new AlertDialog.Builder(AddPlaceActivity.this);
                 String[] pictureDialogItems = {
                         "انتخاب از گالری"
-                        };
+                };
                 pictureDialog.setItems(pictureDialogItems,
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -215,15 +258,10 @@ public class AddPlaceActivity extends AppCompatActivity {
     }
 
 
-
-
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
-
-
 
 
     @Override
@@ -236,7 +274,7 @@ public class AddPlaceActivity extends AppCompatActivity {
             try {
                 bitmap2 = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 //Toast.makeText(this, "عکس انتخاب شد", Toast.LENGTH_LONG).show();
-                Toast.makeText(this, ""+bitmap2, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "" + bitmap2, Toast.LENGTH_LONG).show();
                 imgArPlace.setImageBitmap(bitmap2);
 
 
@@ -247,12 +285,12 @@ public class AddPlaceActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else if (requestCode == PICK_IMAGE_REQUEST_PROFILE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        } else if (requestCode == PICK_IMAGE_REQUEST_PROFILE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri filePath2 = data.getData();
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath2);
                 //Toast.makeText(this, "عکس انتخاب شد", Toast.LENGTH_LONG).show();
-                Toast.makeText(this, ""+bitmap, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "" + bitmap, Toast.LENGTH_LONG).show();
 
                 enterPlaceImage.setImageBitmap(bitmap);
                 BitmapDrawable background = new BitmapDrawable(bitmap);
@@ -261,12 +299,17 @@ public class AddPlaceActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else if (requestCode == SELECT_VIDEO) {
+        } else if (requestCode == SELECT_VIDEO) {
             videoArPlace.setVisibility(View.VISIBLE);
             btnControllerVideo.setVisibility(View.VISIBLE);
             System.out.println("SELECT_VIDEO");
             Uri selectedImageUri = data.getData();
-            selectedPath = getPath(selectedImageUri);
+            try {
+                selectedPath = getPath(selectedImageUri);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             videoArPlace.setVideoPath(selectedPath);
 
             btnControllerVideo.setOnClickListener(new View.OnClickListener() {
@@ -289,45 +332,7 @@ public class AddPlaceActivity extends AppCompatActivity {
         }
 
 
-       /* if (resultCode == this.RESULT_CANCELED) {
-            return;
-        }
-        if (requestCode == GALLERY) {
-            if (data != null) {
-                Uri contentURI = data.getData();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                    String path = saveImage(bitmap);
-                    Toast.makeText(AddPlaceActivity.this, "عکس ذخیره شد", Toast.LENGTH_SHORT).show();
-
-
-                    //blure Gallery
-                    //bitmap = new BlureImage(bitmap , 1 , 6).getBitmap();
-                    BitmapDrawable background = new BitmapDrawable(bitmap);
-                    imgArPlace.setBackgroundDrawable(background);
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(AddPlaceActivity.this, "لغو شد", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        } else if (requestCode == CAMERA) {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-
-            //blure Camera
-            //thumbnail = new BlureImage(thumbnail , 1 , 6).getBitmap();
-            BitmapDrawable background = new BitmapDrawable(thumbnail);
-            imgArPlace.setBackgroundDrawable(background);
-            saveImage(thumbnail);
-            Toast.makeText(AddPlaceActivity.this, "عکس ذخیره شد", Toast.LENGTH_SHORT).show();
-
-        } */
     }
-
-
-
 
 
     //Netword is True | False
@@ -353,7 +358,7 @@ public class AddPlaceActivity extends AppCompatActivity {
                 AlertDialog.Builder pictureDialog = new AlertDialog.Builder(AddPlaceActivity.this);
                 String[] pictureDialogItems = {
                         "انتخاب از گالری"
-                       };
+                };
                 pictureDialog.setItems(pictureDialogItems,
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -377,7 +382,6 @@ public class AddPlaceActivity extends AppCompatActivity {
         });
 
     }
-
 
 
     //open dialog afret click on btn video ar
@@ -412,7 +416,6 @@ public class AddPlaceActivity extends AppCompatActivity {
     }
 
 
-
     //load image proflie in image view
     private void loadimgGg() {
         try {
@@ -427,7 +430,8 @@ public class AddPlaceActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
 
-        }try {
+        }
+        try {
 
             if (!save.load("imgBgProfile", "").equals("")) {
 
@@ -457,10 +461,6 @@ public class AddPlaceActivity extends AppCompatActivity {
 
         }
     }
-
-
-
-
 
 
     //Upload Video To Server
@@ -506,7 +506,7 @@ public class AddPlaceActivity extends AppCompatActivity {
     }
 
     //Upload Image To Server
-    public void uploadImageAr(String name, String desc, String mobile, String add){
+    public void uploadImageAr(String name, String desc, String mobile, String add) {
 
 
         RequestQueue requestQueue = Volley.newRequestQueue(AddPlaceActivity.this);
@@ -518,7 +518,7 @@ public class AddPlaceActivity extends AppCompatActivity {
                 //Log.i("Myresponse",""+s);
                 //Toast.makeText(AddPlaceActivity.this, ""+s, Toast.LENGTH_LONG).show();
 
-                save.save(AppController.SAVE_IMAGE_URL , s);
+                save.save(AppController.SAVE_IMAGE_URL, s);
 
                 uploadImageProfile(
                         name,
@@ -531,18 +531,18 @@ public class AddPlaceActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("Mysmart",""+error);
-                Toast.makeText(AddPlaceActivity.this, ""+error, Toast.LENGTH_LONG).show();
+                Log.i("Mysmart", "" + error);
+                Toast.makeText(AddPlaceActivity.this, "" + error, Toast.LENGTH_LONG).show();
 
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> param = new HashMap<>();
+                Map<String, String> param = new HashMap<>();
 
                 String images = getStringImage(bitmap2);
-                Log.i("Mynewsam",""+images);
-                param.put("image",images);
+                Log.i("Mynewsam", "" + images);
+                param.put("image", images);
                 return param;
             }
         };
@@ -552,8 +552,8 @@ public class AddPlaceActivity extends AppCompatActivity {
 
     }
 
-    //Upload Image Profile To Server
-    public void uploadImageProfile(String name, String desc, String mobile, String add){
+    //Upload Image Model_Gallery To Server
+    public void uploadImageProfile(String name, String desc, String mobile, String add) {
 
 
         RequestQueue requestQueue = Volley.newRequestQueue(AddPlaceActivity.this);
@@ -568,9 +568,9 @@ public class AddPlaceActivity extends AppCompatActivity {
                 //save.save(AppController.SAVE_IMAGE_URL , s);
 
                 addPlace(
-                        "10",
+                        save.load(AppController.SAVE_USER_ID, "10"),
                         "1",
-                        save.load(AppController.SAVE_GEO,"0"),
+                        save.load(AppController.SAVE_USER_GEO, "0"),
                         name,
                         desc,
                         mobile,
@@ -582,18 +582,18 @@ public class AddPlaceActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("Mysmart",""+error);
-                Toast.makeText(AddPlaceActivity.this, ""+error, Toast.LENGTH_LONG).show();
+                Log.i("Mysmart", "" + error);
+                Toast.makeText(AddPlaceActivity.this, "" + error, Toast.LENGTH_LONG).show();
 
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> param = new HashMap<>();
+                Map<String, String> param = new HashMap<>();
 
                 String images = getStringImage(bitmap);
-                Log.i("Mynewsam",""+images);
-                param.put("image",images);
+                Log.i("Mynewsam", "" + images);
+                param.put("image", images);
                 return param;
             }
         };
@@ -616,8 +616,8 @@ public class AddPlaceActivity extends AppCompatActivity {
         params.put("mobile", mobile);
         params.put("add", add);
         params.put("img", img);
-        params.put("arimage", save.load(AppController.SAVE_IMAGE_URL,"null"));
-        params.put("arvideo", save.load(AppController.SAVE_VIDEO_URL,"null"));
+        params.put("arimage", save.load(AppController.SAVE_IMAGE_URL, "null"));
+        params.put("arvideo", save.load(AppController.SAVE_VIDEO_URL, "null"));
 
         CustomRequest jsonObjReq = new CustomRequest(Request.Method.POST, AppController.URL_POINT_ADD, params, new Response.Listener<JSONObject>() {
             @Override
@@ -658,21 +658,17 @@ public class AddPlaceActivity extends AppCompatActivity {
     }
 
 
-
-
     //compress image
-    public String getStringImage(Bitmap bitmap){
-        Log.i("MyHitesh",""+bitmap);
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b=baos.toByteArray();
-        String temp=Base64.encodeToString(b, Base64.DEFAULT);
+    public String getStringImage(Bitmap bitmap) {
+        Log.i("MyHitesh", "" + bitmap);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
 
 
         return temp;
     }
-
-
 
 
     //for video
@@ -682,6 +678,7 @@ public class AddPlaceActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select a Video "), SELECT_VIDEO);
     }
+
     public String getPath(Uri uri) {
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
@@ -693,12 +690,18 @@ public class AddPlaceActivity extends AppCompatActivity {
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
         cursor.moveToFirst();
-        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+
+        String path = "";
+        try {
+            path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         cursor.close();
 
         return path;
     }
-
 
 
     //Dialog Choose Gallery and Camera
@@ -708,6 +711,7 @@ public class AddPlaceActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+
     private void choosePhotoFromGallaryProfile() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -720,8 +724,6 @@ public class AddPlaceActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA);
     }
-
-
 
 
 }

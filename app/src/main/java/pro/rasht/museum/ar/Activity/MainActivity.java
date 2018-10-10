@@ -36,7 +36,6 @@ import pro.rasht.museum.ar.Model.HoloModel;
 import pro.rasht.museum.ar.Model.PointModel;
 import pro.rasht.museum.ar.Model.Target;
 import pro.rasht.museum.ar.Model.VrModel;
-import pro.rasht.museum.ar.R;
 import pro.rasht.museum.ar.network.AppController;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //defult property View
-        tvProfileBody.setVisibility(View.VISIBLE);
+        tvHomeBody.setVisibility(View.VISIBLE);
 
 
 

@@ -19,6 +19,7 @@ android {
             keyPassword 'Ab101817'
             storeFile file('G:\\zp.jks')
             storePassword 'Ab101817'
+
         }
     }
 
@@ -81,6 +82,16 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$supportLibVersion"
     implementation 'com.github.florent37:diagonallayout:1.0.2'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
+
+    //SegmentedButton(Switcher)
+    implementation 'info.hoang8f:android-segmented:1.0.6'
+    //swip galley
+    //implementation 'com.mindorks:placeholderview:0.6.1'
+    //switch
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+
+    implementation 'com.mindorks.android:placeholderview:1.0.3'
+    annotationProcessor 'com.mindorks.android:placeholderview-compiler:1.0.3'
 
     //glide
     implementation 'com.github.bumptech.glide:glide:3.6.0'

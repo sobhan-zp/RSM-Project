@@ -62,7 +62,9 @@ public class AppController extends Application {
     public final static String SAVE_COMPLETE_PROFILE = "SAVE_COMPLETE_PROFILE";
     public final static String SAVE_VIDEO_URL = "SAVE_VIDEO_URL";
     public final static String SAVE_IMAGE_URL = "SAVE_IMAGE_URL";
-    public final static String SAVE_GEO = "SAVE_GEO";
+    public final static String SAVE_USER_GEO = "SAVE_GEO";
+    public final static String COUNTER_GALLERY = "COUNTER_GALLERY";
+    public final static String Voice = "Voice";
 
 
     public static ArrayList<String> TARGET_PATH = new ArrayList<>();

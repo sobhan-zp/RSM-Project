@@ -21,6 +21,7 @@ import pro.rasht.museum.ar.Activity.MainActivity;
 import pro.rasht.museum.ar.Activity.EnterProfileActivity;
 import pro.rasht.museum.ar.Classes.CircularImageView;
 import pro.rasht.museum.ar.Classes.SavePref;
+
 import pro.rasht.museum.ar.R;
 import pro.rasht.museum.ar.network.AppController;
 
@@ -48,6 +49,7 @@ public class FragmentProfile extends Fragment {
     TextView tvPhoneProfile;
     @BindView(R.id.li_exit_profil)
     LinearLayout liExitProfil;
+
     private FragmentActivity context;
     private View view;
     private LinearLayoutManager mLayoutManager;
