@@ -301,6 +301,8 @@ public class ArFragmentSupport extends Fragment implements FpsUpdatable,OnClickL
             checkIfSensorsAvailable();
         } catch (IllegalStateException e) {
             throw e;
+        }catch (Exception e){
+            e.printStackTrace();
         }
         mWorld = world;
         mBeyondarGLSurface.setWorld(world);

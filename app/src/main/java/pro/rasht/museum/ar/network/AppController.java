@@ -12,6 +12,7 @@ import com.android.volley.toolbox.Volley;
 import java.util.ArrayList;
 
 import pro.rasht.museum.ar.Model.HoloModel;
+import pro.rasht.museum.ar.Model.Model_Gallery;
 import pro.rasht.museum.ar.Model.PointModel;
 import pro.rasht.museum.ar.Model.VrModel;
 import pro.rasht.museum.ar.R;
@@ -28,7 +29,7 @@ public class AppController extends Application {
     public static final String TAG = AppController.class.getSimpleName();
 
 
-    public final static String BASE = "http://192.168.1.253/rsm/";
+    public final static String BASE = "http://rsm.tours/rsm/";
     public final static String URL = BASE + "index.php/api/";
 
     public final static String URL_POINT = URL + "point/";
@@ -43,6 +44,13 @@ public class AppController extends Application {
 
     public final static String URL_HOLO = URL + "holo/";
     public final static String URL_HOLO_DETAIL = URL + "holo/detail/";
+
+
+    public final static String URL_GALLERY = URL + "gallery/";
+    public final static String URL_GALLERY_DETAIL = URL + "gallery/detail/";
+
+    public final static String URL_GALLERY_LIKE = URL + "gallery/like/";
+    public final static String URL_GALLERY_DISLIKE = URL + "gallery/dislike/";
 
 
     public final static String URL_SIGNUP = URL + "user/signup";
@@ -63,6 +71,7 @@ public class AppController extends Application {
     public final static String SAVE_VIDEO_URL = "SAVE_VIDEO_URL";
     public final static String SAVE_IMAGE_URL = "SAVE_IMAGE_URL";
     public final static String SAVE_USER_GEO = "SAVE_GEO";
+    public final static String SAVE_LAST_LIKE = "SAVE_LAST_LIKE";
     public final static String COUNTER_GALLERY = "COUNTER_GALLERY";
     public final static String Voice = "Voice";
 
@@ -72,10 +81,12 @@ public class AppController extends Application {
     public static ArrayList<VrModel> VRMODEL = new ArrayList<>();
     public static ArrayList<HoloModel> HOLOMODEL = new ArrayList<>();
     public static ArrayList<PointModel> POINTMODEL = new ArrayList<>();
+    public static ArrayList<Model_Gallery> GALLERYMODEL = new ArrayList<>();
     public static int TARGET_NUMBERS = 0;
     public static int VRMODEL_NUMBERS = 0;
     public static int HOLOMODEL_NUMBERS = 0;
     public static int POINTMODEL_NUMBERS = 0;
+    public static int GALLERYMODEL_NUMBERS = 0;
 
 
 

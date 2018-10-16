@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -33,6 +34,7 @@ import pro.rasht.museum.ar.Classes.SavePref;
 import pro.rasht.museum.ar.Fragment.Items_Viewpager_market;
 import pro.rasht.museum.ar.Fragment.NonSwipeableViewPager;
 import pro.rasht.museum.ar.Model.HoloModel;
+import pro.rasht.museum.ar.Model.Model_Gallery;
 import pro.rasht.museum.ar.Model.PointModel;
 import pro.rasht.museum.ar.Model.Target;
 import pro.rasht.museum.ar.Model.VrModel;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         loadAr();
         loadVr();
         loadHolo();
+        //loadGallery();
 
 
         //tak,il etelaat
@@ -358,6 +361,45 @@ public class MainActivity extends AppCompatActivity {
         });
         req.setShouldCache(false);
         AppController.getInstance().addToRequestQueue(req, "loadVr");
+    }
+    private void loadGallery() {
+        JsonArrayRequest req = new JsonArrayRequest(AppController.URL_GALLERY,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Log.e("TAG---------OK", response.toString());
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+
+                                JSONObject object = response.getJSONObject(i);
+
+                                Model_Gallery model = new Model_Gallery();
+                                model.setId_img(object.getString("id"));
+                                model.setTitle_img(object.getString("caption"));
+                                model.setYears_img(object.getString("year"));
+                                model.setDesc_img(object.getString("description"));
+                                model.setLike_img(object.getString("count"));
+                                model.setImage_img(object.getString("img"));
+
+                                AppController.GALLERYMODEL.add(model);
+
+                                Log.e("---------------------->" ,  model.getLike_img());
+                            }
+                            AppController.GALLERYMODEL_NUMBERS = response.length();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("TAG------------Error", "Error: " + error.getMessage());
+            }
+        });
+        req.setShouldCache(false);
+        AppController.getInstance().addToRequestQueue(req, "loadGallery");
     }
 
 

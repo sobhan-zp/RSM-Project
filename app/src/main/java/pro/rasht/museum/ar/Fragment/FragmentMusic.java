@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 
@@ -20,17 +21,11 @@ import pro.rasht.museum.ar.R;
 
 public class FragmentMusic extends Fragment implements QRCodeReaderView.OnQRCodeReadListener {
 
-    private static final int MY_PERMISSION_REQUEST_CAMERA = 0;
-
     private QRCodeReaderView qrCodeReaderView;
     private CheckBox flashlightCheckbox;
-    private CheckBox enableDecodingCheckBox;
-    private boolean isRunning= false;
-    private TextView resultTextView;
 
-    private FragmentActivity contInst;
+    private FragmentActivity Context;
     private View view;
-    private LinearLayoutManager mLayoutManager;
 
     public static FragmentMusic newInstance() {
 
@@ -44,24 +39,26 @@ public class FragmentMusic extends Fragment implements QRCodeReaderView.OnQRCode
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_music, container, false);
-        contInst = getActivity();
+        Context = getActivity();
         //java code
 
-
-
-
         flashlightCheckbox = (CheckBox)view.findViewById(R.id.flashlight_checkbox);
-        enableDecodingCheckBox = (CheckBox) view.findViewById(R.id.enable_decoding_checkbox);
-        qrCodeReaderView = (QRCodeReaderView)view.findViewById(R.id.qrdecoderview);
-        qrCodeReaderView.setOnQRCodeReadListener(FragmentMusic.this);
-        resultTextView = (TextView)view.findViewById(R.id.result_text_view);
 
+
+        qrCodeReaderView = (QRCodeReaderView) view.findViewById(R.id.qrdecoderview);
+        qrCodeReaderView.setOnQRCodeReadListener(this);
+
+        // Use this function to enable/disable decoding
         qrCodeReaderView.setQRDecodingEnabled(true);
-
-        qrCodeReaderView.setAutofocusInterval(2000L);
+        // Use this function to change the autofocus interval (default is 5 secs)
+        qrCodeReaderView.setAutofocusInterval(5000L);
+        // Use this function to enable/disable Torch
         qrCodeReaderView.setTorchEnabled(true);
+        // Use this function to set front camera preview
         qrCodeReaderView.setFrontCamera();
+        // Use this function to set back camera preview
         qrCodeReaderView.setBackCamera();
+
 
         flashlightCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -70,16 +67,6 @@ public class FragmentMusic extends Fragment implements QRCodeReaderView.OnQRCode
 
             }
         });
-
-
-        enableDecodingCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                qrCodeReaderView.setQRDecodingEnabled(isChecked);
-            }
-        });
-
-
-
 
 
 
@@ -101,23 +88,8 @@ public class FragmentMusic extends Fragment implements QRCodeReaderView.OnQRCode
     }
 
 
-
     @Override
-    public void onQRCodeRead(String text, PointF[] points  )
-    {
-        if(isRunning)
-            return;
-
-        isRunning = true;
-
-        //Your code
-
-        resultTextView.setText(text+"");
-
-        //your code
-
-
+    public void onQRCodeRead(String text, PointF[] points) {
+        Toast.makeText(Context, ""+text, Toast.LENGTH_SHORT).show();
     }
-
-
 }

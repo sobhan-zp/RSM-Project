@@ -131,6 +131,8 @@ public class AddPlaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        save = new SavePref(this);
+
         //empty point map ()if else
         save.save(AppController.SAVE_USER_GEO , "0");
 

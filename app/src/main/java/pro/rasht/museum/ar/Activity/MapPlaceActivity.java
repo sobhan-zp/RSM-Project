@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
@@ -94,12 +96,21 @@ public class MapPlaceActivity extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onClick(View v) {
                 //mLocationMarkerText.setText("" + mCenterLatLong.latitude + "," + mCenterLatLong.longitude);
+
                 save.save(AppController.SAVE_USER_GEO , "" + mCenterLatLong.latitude + "," + mCenterLatLong.longitude);
                 finish();
             }
         });
 
         selectLocation();
+    }
+
+    private Bitmap loadBitmapFromView(View v, int width, int height) {
+        Bitmap b = Bitmap.createBitmap(width , height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        v.layout(0, 0, v.getLayoutParams().width, v.getLayoutParams().height);
+        v.draw(c);
+        return b;
     }
 
 

@@ -283,10 +283,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        try{
+            Poi_details_call(poiResult.get(0).getPlaceId());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        Poi_details_call(poiResult.get(0).getPlaceId());
 
-        Log.e("ID----------", poiResult.get(0).getPlaceId());
+        //Log.e("ID----------", poiResult.get(0).getPlaceId());
 
         return false;
     }
@@ -337,6 +341,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Set a listener for marker click.
         mMap.setOnMarkerClickListener(this);
+
+        btnAllPointMaps.performClick();
     }
 
 
@@ -742,7 +748,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 dialog_place_image.setImageResource(android.R.color.transparent);
                 dialog_place_name.setText(" ");
                 dialog_place_addr.setText(" ");
-                mediaPlayer.stop();
+                try{
+                    mediaPlayer.stop();
+                }catch (Exception e){
+                    System.out.println("Error " + e.getMessage());
+                }
+
             }
         });
 
@@ -1186,7 +1197,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             MarkerOptions markerOptions = new MarkerOptions();
 
             mMap.clear();
-            addMarkers();
+            btnAllPointMaps.performClick();
 
             for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList<>();
@@ -1212,7 +1223,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             // Drawing polyline in the Google Map for the i-th route
-             mMap.addPolyline(lineOptions);
+
+            try {
+                mMap.addPolyline(lineOptions);
+            }catch (Exception e){
+                Toast.makeText(context, "محدودیت استفاده از مسیر یابی به پایان رسیده است", Toast.LENGTH_SHORT).show();
+            }finally {
+                btnHistoryPointMaps.performClick();
+                btnAllPointMaps.performClick();
+            }
+
         }
     }
 

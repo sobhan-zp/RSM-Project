@@ -8,51 +8,68 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Model_Gallery {
 
-    @SerializedName("name")
-    @Expose
-    private String name;
+    private String id_img;
 
-    @SerializedName("drawable_name")
-    @Expose
-    private String drawableName;
+    private String title_img;
 
-    @SerializedName("age")
-    @Expose
-    private Integer age;
+    private String years_img;
 
-    @SerializedName("location")
-    @Expose
-    private String location;
+    private String desc_img;
 
-    public String getName() {
-        return name;
+    private String like_img;
+
+    private String image_img;
+
+
+
+
+    public String getImage_img() {
+        return image_img;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setImage_img(String image_img) {
+        this.image_img = image_img;
     }
 
-    public String getDrawableName() {
-        return drawableName;
+    public String getId_img() {
+        return id_img;
     }
 
-    public void setDrawableName(String drawableName) {
-        this.drawableName = drawableName;
+    public void setId_img(String id_img) {
+        this.id_img = id_img;
     }
 
-    public Integer getAge() {
-        return age;
+    public String getLike_img() {
+        return like_img;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setLike_img(String like_img) {
+        this.like_img = like_img;
     }
 
-    public String getLocation() {
-        return location;
+
+
+    public String getTitle_img() {
+        return title_img;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setTitle_img(String title_img) {
+        this.title_img = title_img;
+    }
+
+    public String getYears_img() {
+        return years_img;
+    }
+
+    public void setYears_img(String years_img) {
+        this.years_img = years_img;
+    }
+
+    public String getDesc_img() {
+        return desc_img;
+    }
+
+    public void setDesc_img(String desc_img) {
+        this.desc_img = desc_img;
     }
 }
