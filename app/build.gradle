@@ -29,6 +29,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
+
+
+        debug {
+            resValue("string", "PORT_NUMBER", "8081")
+        }
     }
     compileOptions {
         targetCompatibility 1.8
@@ -88,13 +93,15 @@ dependencies {
     implementation 'com.mindorks:placeholderview:0.6.1'
     //button animation Like
     implementation 'com.github.jd-alexander:LikeButton:0.2.3'
+    //manage Database Sqlite Online
+    debugImplementation 'com.amitshekhar.android:debug-db:0.4.0'
+
 
     /*Google Library*/
     implementation 'com.google.android.gms:play-services-location:10.0.1'
     implementation 'com.google.android.gms:play-services-maps:10.0.1'
     implementation 'com.google.android.gms:play-services-places:10.0.1'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
-    //    compile  'com.google.android.gms:play-services:10.0.1'
     /*Google Library*/
 
 

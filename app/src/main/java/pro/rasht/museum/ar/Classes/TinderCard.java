@@ -32,6 +32,7 @@ import org.w3c.dom.Text;
 import java.util.HashMap;
 import java.util.Map;
 
+import pro.rasht.museum.ar.DatabaseHelpher;
 import pro.rasht.museum.ar.Fragment.FragmentGallery;
 import pro.rasht.museum.ar.Model.Model_Gallery;
 import pro.rasht.museum.ar.R;
@@ -74,6 +75,11 @@ public class TinderCard {
 
     SavePref save;
 
+    DatabaseHelpher helpher;
+    Long index;
+    String index2;
+    boolean i;
+
     public TinderCard(Context context, Model_Gallery model_gallery, SwipePlaceHolderView swipeView) {
         mContext = context;
         mModel_gallery = model_gallery;
@@ -84,8 +90,7 @@ public class TinderCard {
     @Resolve
     private void onResolved(){
 
-        /*int drawableId = mContext.getResources().getIdentifier(
-                mModel_gallery.getTitle_img(),"drawable",mContext.getPackageName());*/
+        //helpher.deleteDB();
 
 
         Glide.with(mContext).load(mModel_gallery.getImage_img()).into(profileImageView);
@@ -98,8 +103,8 @@ public class TinderCard {
 
 
                 final Dialog dialog = new Dialog(mContext);
-                dialog.setContentView(R.layout.dialog_desc_gallery);
-                Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+               // dialog.setContentView(R.layout.dialog_desc_gallery);
+                //Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
                 TextView text = (TextView) dialog.findViewById(R.id.text);
                 text.setText(mModel_gallery.getDesc_img());
                 // if button is clicked, close the custom dialog
@@ -114,6 +119,11 @@ public class TinderCard {
 
         tvLikeGallery.setText(mModel_gallery.getLike_img());
 
+       /* helpher = new DatabaseHelpher(mContext);
+        index2 = helpher.selectDb(mModel_gallery.getId_img());
+        Log.e("- - - - select - - -" , index2);*/
+
+
 
         btnLikeGallery.setOnLikeListener(new OnLikeListener() {
             @Override
@@ -124,6 +134,20 @@ public class TinderCard {
                         save.load(AppController.SAVE_USER_ID,"10"),
                         mModel_gallery.getId_img()
                 );
+
+
+
+                helpher = new DatabaseHelpher(mContext);
+                index = helpher.insertIntoDB(mModel_gallery.getId_img() , "1" );
+                Log.e("----DB----" , String.valueOf(index));
+
+                index2 = helpher.selectDb(mModel_gallery.getId_img());
+                Toast.makeText(mContext, "" + index2, Toast.LENGTH_SHORT).show();
+
+
+
+
+
             }
 
             @Override
@@ -134,6 +158,11 @@ public class TinderCard {
                         save.load(AppController.SAVE_USER_ID,"10"),
                         mModel_gallery.getId_img()
                 );
+
+                helpher = new DatabaseHelpher(mContext);
+                String update= String.valueOf(helpher.updateDb(Long.parseLong(mModel_gallery.getId_img()), "0"));
+                Log.e("----DB----" , String.valueOf(update));
+
 
             }
         });
@@ -198,6 +227,14 @@ public class TinderCard {
                     if (resp.getString("status").equals("200")) {
 
                         Toast.makeText(mContext, "liked", Toast.LENGTH_SHORT).show();
+
+                       // btnLikeGallery.setVisibility(android.view.View.GONE);
+
+
+                    }else if (resp.getString("status").equals("403")) {
+
+                        Toast.makeText(mContext, "resently like", Toast.LENGTH_SHORT).show();
+
 
 
                     }
